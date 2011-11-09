@@ -1,4 +1,6 @@
-import parser.Parser;
+import analyser.*;
+
+import parser.*;
 
 
 public class LabActvityParser
@@ -10,8 +12,20 @@ public class LabActvityParser
 			System.exit(1);
 		} else
 		{
-			Parser p = new Parser();
-			p.read(args[0]);
+			DataSource p = new Parser();
+			p.read(args[0], "data");
+			
+			System.out.println("Day of Week");
+			OccupancyAnalyser a = new DayOfWeekAnalysis();
+			a.analyse(p.getData());
+			
+			System.out.println("Day of Month");
+			OccupancyAnalyser b = new DayOfMonthAnalysis();
+			b.analyse(p.getData());
+			
+			System.out.println("Hour of Day");
+			OccupancyAnalyser c = new HourOfDayAnalysis();
+			c.analyse(p.getData());
 		}
 	}
 }

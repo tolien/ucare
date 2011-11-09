@@ -3,26 +3,23 @@ package parser;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import au.com.bytecode.opencsv.CSVReader;
 
-public class ReadFile implements Iterable<Object[]>, Callable<ReadFile>
+public class ReadFile implements Callable<ReadFile>
 {
-	private static int LAB_NAME = 0;
-	private static int USERS = 1;
-	private static int TOTAL_MACHINES = 2;
-	private static int DAY_NAME = 3;
-	private static int DATE = 4;
-	private static int TIME = 5;
+	public static int LAB_NAME = 0;
+	public static int USERS = 1;
+	public static int TOTAL_MACHINES = 2;
+	public static int DAY_NAME = 3;
+	public static int DATE = 4;
+	public static int TIME = 5;
 
 	private SimpleDateFormat dateFormatter = new SimpleDateFormat(
 			"dd/MM/yyyy HH:mm:ss");
@@ -33,19 +30,20 @@ public class ReadFile implements Iterable<Object[]>, Callable<ReadFile>
 	private File file;
 	private String lab;
 
-	private List<Object[]> data;
+	private Map<Date, Object[]> data;
 
-	public ReadFile(File f, String lab) throws IOException
+	public ReadFile(File f, String lab)
 	{
 		this.file = f;
 		this.lab = lab;
 		
-		data = new ArrayList<Object[]>();
+		data = new HashMap<Date, Object[]>();
 	}
 
 	private void read() throws IOException
 	{
 		String[] nextLine = null;
+		
 		try
 		{
 			FileReader fr = new FileReader(file);
@@ -59,15 +57,8 @@ public class ReadFile implements Iterable<Object[]>, Callable<ReadFile>
 					Date time = null;
 					time = dateFormatter.parse(nextLine[DATE] + " "
 							+ nextLine[TIME]);
-
-					int users = Integer.parseInt(nextLine[USERS]);
-					data.add(nextLine);
-
-					if (users > max)
-					{
-						max = users;
-						maxTime = time;
-					}
+					
+					data.put(time, nextLine);
 				}
 			}
 		} catch (Exception e)
@@ -78,19 +69,27 @@ public class ReadFile implements Iterable<Object[]>, Callable<ReadFile>
 	}
 
 	@Override
-	public Iterator<Object[]> iterator()
-	{
-		return data.iterator();
-	}
-
-	@Override
 	public ReadFile call() throws Exception
 	{
 		this.read();
 		return this;
+	}	
+	
+	public Map<Date, Integer> getOccupancy()
+	{
+		HashMap<Date, Integer> result = new HashMap<Date, Integer>();
+		if (data.keySet().size() > 0)
+		{
+			Iterator<Date> it = data.keySet().iterator();
+			while (it.hasNext())
+			{
+				Date d = it.next();
+				Object[] line = data.get(d);
+				result.put(d, Integer.parseInt((String) line[ReadFile.USERS]));
+			}
+		}
+		
+		return result;
 	}
-
-	
-	
 	
 }

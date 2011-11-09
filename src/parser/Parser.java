@@ -2,13 +2,13 @@ package parser;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
@@ -16,62 +16,56 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class Parser
+public class Parser implements DataSource
 {
-	public void read(String lab)
+	private ExecutorService execService;
+	private CompletionService<ReadFile> ecs;
+	private HashMap<Date, Integer> data;
+	
+	public Parser()
+	{
+		execService = Executors.newFixedThreadPool(Runtime
+				.getRuntime().availableProcessors() * 8);
+		ecs = new ExecutorCompletionService<ReadFile>(execService);
+		
+		data = new HashMap<Date, Integer>();
+	}
+	
+	public void read(String lab, String directory)
 	{
 		try
 		{
-			File dir = new File("data");
-			
-			ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2);
-			CompletionService<ReadFile> ecs = new ExecutorCompletionService<ReadFile>(executor);
-			List<Future<ReadFile>> futures = new ArrayList<Future<ReadFile>>();
+			File dir = new File(directory);
 
-			HashMap<Date, Integer> maxima = new HashMap<Date, Integer>();
+			List<Future<ReadFile>> futures = new ArrayList<Future<ReadFile>>();
+			
 			String[] files = fileList(dir);
 			for (String file : files)
 			{
-				ReadFile reader = new ReadFile(new File(dir.getName() + File.separator + file),
-						lab);
+				String filename = dir.getName() + File.separator + file;
+				ReadFile reader = new ReadFile(new File(filename), lab);
 				futures.add(ecs.submit(reader));
+
 			}
-			
+
 			Iterator<Future<ReadFile>> futureIt = futures.iterator();
 			while (futureIt.hasNext())
 			{
+
 				ReadFile rf = futureIt.next().get();
-				if (rf.max > 0)
-				{
-					maxima.put(rf.maxTime, rf.max);
-				}
-				
-				
+				Map<Date, Integer> readData = rf.getOccupancy();
+				data.putAll(readData);
 			}
 			
-			executor.shutdown();			
-			
-			List<Date> dates = asSortedList(maxima.keySet());
-
-			Iterator<Date> it = dates.iterator();
-			while (it.hasNext())
-			{
-				Date d = it.next();
-				System.out.println(d + ": " + maxima.get(d));
-			}
-
-		} catch (IOException e)
+		} catch (ExecutionException e)
+		{
+			e.printStackTrace();
+		} catch (InterruptedException e)
 		{
 			e.printStackTrace();
 		}
-		catch (ExecutionException e)
-		{
-			e.printStackTrace();
-		}
-		catch (InterruptedException e)
-		{
-			e.printStackTrace();
-		}
+		
+		execService.shutdown();
 	}
 
 	public String[] fileList(File dir)
@@ -98,5 +92,11 @@ public class Parser
 		List<T> list = new ArrayList<T>(c);
 		java.util.Collections.sort(list);
 		return list;
+	}
+
+	@Override
+	public Map<Date, Integer> getData()
+	{
+		return data;
 	}
 }
