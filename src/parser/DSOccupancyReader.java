@@ -12,7 +12,7 @@ import java.util.concurrent.Callable;
 
 import au.com.bytecode.opencsv.CSVReader;
 
-public class ReadFile implements Callable<ReadFile>
+public class DSOccupancyReader implements Callable<DSOccupancyReader>
 {
 	public static int LAB_NAME = 0;
 	public static int USERS = 1;
@@ -32,7 +32,7 @@ public class ReadFile implements Callable<ReadFile>
 
 	private Map<Date, Object[]> data;
 
-	public ReadFile(File f, String lab)
+	public DSOccupancyReader(File f, String lab)
 	{
 		this.file = f;
 		this.lab = lab;
@@ -69,7 +69,7 @@ public class ReadFile implements Callable<ReadFile>
 	}
 
 	@Override
-	public ReadFile call() throws Exception
+	public DSOccupancyReader call() throws Exception
 	{
 		this.read();
 		return this;
@@ -85,7 +85,7 @@ public class ReadFile implements Callable<ReadFile>
 			{
 				Date d = it.next();
 				Object[] line = data.get(d);
-				result.put(d, Integer.parseInt((String) line[ReadFile.USERS]));
+				result.put(d, Integer.parseInt((String) line[DSOccupancyReader.USERS]));
 			}
 		}
 		
