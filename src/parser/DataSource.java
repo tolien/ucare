@@ -4,11 +4,12 @@ import java.util.*;
 
 public interface DataSource
 {
+	public static int DS = 1;
 	
-	public void read(String labName, String directory);
+	public void read(String labName, String directory, ParserFactory parser);
 	
-	public Map<Date, Integer> getData();
+	public Map<Date, Integer> getAbsoluteOccupancy();	
+	public Map<Date, Float> getRelativeOccupancy();
 	
-	public List<String> getLabList();
-	
+	public List<String> getLabList();	
 }
