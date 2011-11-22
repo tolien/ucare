@@ -2,6 +2,7 @@ package parser;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -9,6 +10,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
@@ -19,42 +21,46 @@ import java.util.concurrent.Future;
 public class Parser implements DataSource
 {
 	private ExecutorService execService;
-	private CompletionService<ReadFile> ecs;
-	private HashMap<Date, Integer> data;
+	private CompletionService<Occupancy> ecs;
+	private List<String> labs;
+	private Map<Date, Integer> absoluteData;
+	private Map<Date, Float> relativeData;
 	
 	public Parser()
 	{
 		execService = Executors.newFixedThreadPool(Runtime
-				.getRuntime().availableProcessors() * 8);
-		ecs = new ExecutorCompletionService<ReadFile>(execService);
+				.getRuntime().availableProcessors());
+		ecs = new ExecutorCompletionService<Occupancy>(execService);
 		
-		data = new HashMap<Date, Integer>();
+		absoluteData = new HashMap<Date, Integer>();
+		relativeData = new HashMap<Date, Float>();
+		labs = new ArrayList<String>();
 	}
 	
-	public void read(String lab, String directory)
+	public void read(String lab, String directory, ParserFactory parser)
 	{
 		try
 		{
 			File dir = new File(directory);
 
-			List<Future<ReadFile>> futures = new ArrayList<Future<ReadFile>>();
+			List<Future<Occupancy>> futures = new ArrayList<Future<Occupancy>>();
 			
 			String[] files = fileList(dir);
 			for (String file : files)
 			{
 				String filename = dir.getName() + File.separator + file;
-				ReadFile reader = new ReadFile(new File(filename), lab);
+				FileParser reader = new DSParser(new File(filename));
 				futures.add(ecs.submit(reader));
-
 			}
 
-			Iterator<Future<ReadFile>> futureIt = futures.iterator();
+			Iterator<Future<Occupancy>> futureIt = futures.iterator();
 			while (futureIt.hasNext())
 			{
-
-				ReadFile rf = futureIt.next().get();
-				Map<Date, Integer> readData = rf.getOccupancy();
-				data.putAll(readData);
+				Occupancy rf = futureIt.next().get();
+				Map<Date, Integer> readData = rf.getAbsoluteOccupancy(lab);
+				fillLabList(rf.getLabList());
+				if (readData != null)
+					absoluteData.putAll(readData);
 			}
 			
 		} catch (ExecutionException e)
@@ -95,8 +101,48 @@ public class Parser implements DataSource
 	}
 
 	@Override
-	public Map<Date, Integer> getData()
+	public Map<Date, Integer> getAbsoluteOccupancy()
 	{
-		return data;
+		return absoluteData;
+	}
+	
+	@Override
+	public Map<Date, Float> getRelativeOccupancy()
+	{
+		return relativeData;
+	}
+
+	@Override
+	public List<String> getLabList()
+	{
+		return labs;
+	}
+	
+	private void fillLabList(List<String> list)
+	{
+		Iterator<String> it = list.iterator();
+		while (it.hasNext())
+		{
+			String needle = it.next();
+		
+			if (!isInList(needle, labs))
+				labs.add(needle);
+		}
+	}
+	
+	public static boolean isInList(String needle, List<String> haystack)
+	{
+		Iterator<String> haystackIt = haystack.iterator();
+		boolean found = false;
+		while (haystackIt.hasNext() && !found)
+		{
+			String hay = haystackIt.next();
+			if (hay.equals(needle))
+			{
+				found = true;
+			}
+		}
+		
+		return found;
 	}
 }
