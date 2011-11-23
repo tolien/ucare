@@ -1,3 +1,4 @@
+package occupancy;
 import analyser.*;
 import parser.*;
 import java.util.*;
@@ -21,11 +22,11 @@ public class LabActvityParser
 			
 			System.out.println("Day of Month");
 			OccupancyAnalyser b = new DayOfMonthAnalysis();
-			b.analyse(p.getAbsoluteOccupancy());
+		//	b.analyse(p.getAbsoluteOccupancy());
 			
 			System.out.println("Hour of Day");
 			OccupancyAnalyser c = new HourOfDayAnalysis();
-			c.analyse(p.getAbsoluteOccupancy());
+		//	c.analyse(p.getAbsoluteOccupancy());
 		}
 	}
 }

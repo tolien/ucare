@@ -18,6 +18,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import occupancy.Utility;
+
 public class Parser implements DataSource
 {
 	private ExecutorService execService;
@@ -88,18 +90,6 @@ public class Parser implements DataSource
 		return dir.list(filter);
 	}
 
-	/*
-	 * Code for this method was taken from
-	 * http://stackoverflow.com/questions/740299
-	 */
-	public static <T extends Comparable<? super T>> List<T> asSortedList(
-			Collection<T> c)
-	{
-		List<T> list = new ArrayList<T>(c);
-		java.util.Collections.sort(list);
-		return list;
-	}
-
 	@Override
 	public Map<Date, Integer> getAbsoluteOccupancy()
 	{
@@ -125,24 +115,8 @@ public class Parser implements DataSource
 		{
 			String needle = it.next();
 		
-			if (!isInList(needle, labs))
+			if (!Utility.isInList(needle, labs))
 				labs.add(needle);
 		}
-	}
-	
-	public static boolean isInList(String needle, List<String> haystack)
-	{
-		Iterator<String> haystackIt = haystack.iterator();
-		boolean found = false;
-		while (haystackIt.hasNext() && !found)
-		{
-			String hay = haystackIt.next();
-			if (hay.equals(needle))
-			{
-				found = true;
-			}
-		}
-		
-		return found;
 	}
 }
