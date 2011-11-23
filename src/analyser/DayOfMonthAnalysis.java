@@ -19,12 +19,6 @@ public class DayOfMonthAnalysis extends Analyser implements OccupancyAnalyser
 	}
 
 	@Override
-	protected Double summarisationStep(List<Integer> list)
-	{
-		return max(list);
-	}
-
-	@Override
 	protected int getInterval()
 	{
 		return INTERVAL;

@@ -7,11 +7,6 @@ import java.util.List;
 public class HourOfDayAnalysis extends Analyser implements OccupancyAnalyser
 {
 	private static int INTERVAL = Calendar.HOUR_OF_DAY;
-	
-	protected Double summarisationStep(List<Integer> data)
-	{
-		return max(data);
-	}
 
 	@Override
 	protected boolean selectData(Date d)

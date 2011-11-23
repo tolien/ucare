@@ -2,6 +2,8 @@ package analyser;
 
 import java.util.*;
 
+import occupancy.Utility;
+
 import parser.Parser;
 
 public abstract class Analyser implements OccupancyAnalyser
@@ -11,7 +13,7 @@ public abstract class Analyser implements OccupancyAnalyser
 	
 	public void getResult()
 	{
-		List<Integer> keys = Parser.asSortedList(data.keySet());
+		List<Integer> keys = Utility.asSortedList(data.keySet());
 		Iterator<Integer> it = keys.iterator();
 		while (it.hasNext())
 		{
@@ -74,7 +76,7 @@ public abstract class Analyser implements OccupancyAnalyser
 	
 	protected Double max(List<Integer> list)
 	{
-		double max = 0.0;
+		double max = Integer.MIN_VALUE;
 		Iterator<Integer> it = list.iterator();
 		
 		while (it.hasNext())
@@ -89,13 +91,44 @@ public abstract class Analyser implements OccupancyAnalyser
 		return max;
 	}
 	
+	protected Double min(List<Integer> list)
+	{
+		double min = Integer.MAX_VALUE;
+		Iterator<Integer> it = list.iterator();
+		
+		while (it.hasNext())
+		{
+			Integer i = it.next();
+			if (i < min)
+			{
+				min = i + 0.0;
+			}
+		}
+		
+		return min;	
+	}
+	
+	protected Double quartile(List<Integer> list, Integer quartile)
+	{		
+		list = Utility.asSortedList(list);
+		
+		Integer n = quartile * list.size() / 4;
+		System.out.println(list.size() + ", " + n);
+		
+		return list.get(n) + 0.0;
+	}
+	
 	protected Double average(List<Integer> list)
 	{
 		return sum(list) / list.size();
 	}
 
+	protected Double summarisationStep(List<Integer> data)
+	{
+		return max(data);
+	}
+
 	protected abstract boolean selectData(Date d);
-	protected abstract Double summarisationStep(List<Integer> list);
 	protected abstract int getInterval();
 
 }

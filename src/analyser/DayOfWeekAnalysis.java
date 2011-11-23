@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import occupancy.Utility;
+
 import parser.Parser;
 
 public class DayOfWeekAnalysis extends Analyser implements OccupancyAnalyser
@@ -15,14 +17,8 @@ public class DayOfWeekAnalysis extends Analyser implements OccupancyAnalyser
 	
 	@Override
 	protected boolean selectData(Date d)
-	{		
-		return true;
-	}
-
-	@Override
-	protected Double summarisationStep(List<Integer> list)
 	{
-		return max(list);
+		return (d.getHours() > 9 && d.getHours() < 17);
 	}
 
 	@Override
@@ -33,7 +29,7 @@ public class DayOfWeekAnalysis extends Analyser implements OccupancyAnalyser
 	
 	public void getResult()
 	{
-		List<Integer> keys = Parser.asSortedList(data.keySet());
+		List<Integer> keys = Utility.asSortedList(data.keySet());
 		Iterator<Integer> it = keys.iterator();
 		
 		String[] days = dfs.getWeekdays();
