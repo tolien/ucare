@@ -9,7 +9,10 @@ import parser.Parser;
 public abstract class Analyser implements OccupancyAnalyser
 {
 	protected Map<Integer, Double> data = new HashMap<Integer, Double>();
-	protected Integer selectedCalendarField;
+	protected Date minDate;
+	protected Date maxDate;
+	protected Date minTime;
+	protected Date maxTime;
 	
 	public void getResult()
 	{
@@ -88,7 +91,7 @@ public abstract class Analyser implements OccupancyAnalyser
 			}
 		}
 		
-		return max;
+		return (max != Integer.MIN_VALUE) ? max : null;
 	}
 	
 	protected Double min(List<Integer> list)
@@ -105,7 +108,7 @@ public abstract class Analyser implements OccupancyAnalyser
 			}
 		}
 		
-		return min;	
+		return (min != Integer.MAX_VALUE) ? min : null;
 	}
 	
 	protected Double quartile(List<Integer> list, Integer quartile)
@@ -120,7 +123,14 @@ public abstract class Analyser implements OccupancyAnalyser
 	
 	protected Double average(List<Integer> list)
 	{
-		return sum(list) / list.size();
+		if (list.size() > 0)
+		{
+			return sum(list) / list.size();
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 	protected Double summarisationStep(List<Integer> data)
