@@ -32,12 +32,14 @@ public class DSParser implements FileParser
 
 	private Map<String, Map<Date, Integer>> data;
 
-	public DSParser(File f)
+	public DSParser()
+	{
+		data = new HashMap<String, Map<Date, Integer>>();
+	}
+	
+	public void setFile(File f)
 	{
 		this.file = f;
-		
-		data = new HashMap<String, Map<Date, Integer>>();
-
 	}
 
 	public void read() throws IOException
