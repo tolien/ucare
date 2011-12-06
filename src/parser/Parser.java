@@ -51,7 +51,7 @@ public class Parser implements DataSource
 			for (String file : files)
 			{
 				String filename = dir.getName() + File.separator + file;
-				FileParser reader = new DSParser(new File(filename));
+				FileParser reader = parser.getParser(new File(filename));
 				futures.add(ecs.submit(reader));
 			}
 
