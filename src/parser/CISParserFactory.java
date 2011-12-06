@@ -8,7 +8,9 @@ public class CISParserFactory implements ParserFactory
 	@Override
 	public FileParser getParser(File f)
 	{
-		return new DSParser(f);
+		FileParser p = new CISParser();
+		p.setFile(f);
+		return p;
 	}
 
 }
