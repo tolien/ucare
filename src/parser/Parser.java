@@ -76,7 +76,7 @@ public class Parser implements DataSource
 		execService.shutdown();
 	}
 
-	public String[] fileList(File dir)
+	private String[] fileList(File dir)
 	{
 		FilenameFilter filter = new FilenameFilter()
 		{
