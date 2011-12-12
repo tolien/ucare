@@ -4,7 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class DayOfMonthAnalysis extends Analyser implements OccupancyAnalyser
+public class DayOfMonthAnalysis extends Analyser
 {
 	private static int INTERVAL = Calendar.DAY_OF_MONTH;
 	

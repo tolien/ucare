@@ -5,12 +5,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import occupancy.Utility;
 
 import parser.Parser;
 
-public class DayOfWeekAnalysis extends Analyser implements OccupancyAnalyser
+public class DayOfWeekAnalysis extends Analyser
 {
 	private static DateFormatSymbols dfs = new DateFormatSymbols();
 	private static int INTERVAL = Calendar.DAY_OF_WEEK;
@@ -27,7 +28,7 @@ public class DayOfWeekAnalysis extends Analyser implements OccupancyAnalyser
 		return INTERVAL;
 	}
 	
-	public void getResult()
+	public Map<Integer, Double> getResult()
 	{
 		List<Integer> keys = Utility.asSortedList(data.keySet());
 		Iterator<Integer> it = keys.iterator();
@@ -38,6 +39,8 @@ public class DayOfWeekAnalysis extends Analyser implements OccupancyAnalyser
 			int day = it.next();
 			System.out.println(days[day] + ": " + data.get(day));
 		}
+		
+		return data;
 	}
 
 }

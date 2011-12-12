@@ -14,7 +14,7 @@ public abstract class Analyser implements OccupancyAnalyser
 	protected Date minTime;
 	protected Date maxTime;
 	
-	public void getResult()
+	public Map<Integer, Double> getResult()
 	{
 		List<Integer> keys = Utility.asSortedList(data.keySet());
 		Iterator<Integer> it = keys.iterator();
@@ -23,6 +23,8 @@ public abstract class Analyser implements OccupancyAnalyser
 			int day = it.next();
 			System.out.println(day + ": " + data.get(day));
 		}
+		
+		return data;
 	}
 	
 	public void analyse(Map<Date, Integer> points)

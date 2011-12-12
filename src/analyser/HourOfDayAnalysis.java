@@ -4,7 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class HourOfDayAnalysis extends Analyser implements OccupancyAnalyser
+public class HourOfDayAnalysis extends Analyser
 {
 	private static int INTERVAL = Calendar.HOUR_OF_DAY;
 
