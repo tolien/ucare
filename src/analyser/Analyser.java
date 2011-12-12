@@ -118,7 +118,7 @@ public abstract class Analyser implements OccupancyAnalyser
 		list = Utility.asSortedList(list);
 		
 		Integer n = quartile * list.size() / 4;
-		System.out.println(list.size() + ", " + n);
+		// System.out.println(list.size() + ", " + n);
 		
 		return list.get(n) + 0.0;
 	}
