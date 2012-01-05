@@ -61,7 +61,6 @@ public class DSParser implements FileParser
 
 					String labName = (String) nextLine[LAB_NAME];
 					Integer occupancy = Integer.parseInt((String) nextLine[DSParser.USERS]);
-
 					
 					Map<Date, Integer> labData = data.remove(labName);
 					if (labData == null)
