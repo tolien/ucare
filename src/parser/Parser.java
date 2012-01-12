@@ -22,8 +22,7 @@ public class Parser implements DataSource
 	private ExecutorService execService;
 	private CompletionService<Occupancy> ecs;
 	private List<String> labs;
-	private Map<Date, Integer> absoluteData;
-	private Map<Date, Float> relativeData;
+	List<Occupancy> files;
 	
 	public Parser()
 	{
@@ -31,12 +30,11 @@ public class Parser implements DataSource
 				.getRuntime().availableProcessors());
 		ecs = new ExecutorCompletionService<Occupancy>(execService);
 		
-		absoluteData = new HashMap<Date, Integer>();
-		relativeData = new HashMap<Date, Float>();
+		files = new ArrayList<Occupancy>();
 		labs = new ArrayList<String>();
 	}
 	
-	public void read(String lab, String directory, ParserFactory parser)
+	public void read(String directory, ParserFactory parser)
 	{
 		try
 		{
@@ -56,10 +54,7 @@ public class Parser implements DataSource
 			while (futureIt.hasNext())
 			{
 				Occupancy rf = futureIt.next().get();
-				Map<Date, Integer> readData = rf.getAbsoluteOccupancy(lab);
 				fillLabList(rf.getLabList());
-				if (readData != null)
-					absoluteData.putAll(readData);
 			}
 			
 		} catch (ExecutionException e)
@@ -88,15 +83,31 @@ public class Parser implements DataSource
 	}
 
 	@Override
-	public Map<Date, Integer> getAbsoluteOccupancy()
+	public Map<Date, Integer> getAbsoluteOccupancy(String lab)
 	{
-		return absoluteData;
+		Map<Date, Integer> result = new HashMap<Date, Integer>();
+		
+		Iterator<Occupancy> it = files.iterator();
+		while (it.hasNext())
+		{
+			result.putAll(it.next().getAbsoluteOccupancy(lab));
+		}
+		
+		return result;
 	}
 	
 	@Override
-	public Map<Date, Float> getRelativeOccupancy()
+	public Map<Date, Float> getRelativeOccupancy(String lab)
 	{
-		return relativeData;
+		Map<Date, Float> result = new HashMap<Date, Float>();
+		
+		Iterator<Occupancy> it = files.iterator();
+		while (it.hasNext())
+		{
+			result.putAll(it.next().getRelativeOccupancy(lab));
+		}
+		
+		return result;
 	}
 
 	@Override
