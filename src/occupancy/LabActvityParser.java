@@ -1,7 +1,6 @@
 package occupancy;
 import analyser.*;
 import parser.*;
-import java.util.*;
 
 
 public class LabActvityParser
@@ -14,19 +13,20 @@ public class LabActvityParser
 		} else
 		{
 			DataSource p = new Parser();
-			p.read(args[0], "data", new CISParserFactory());
+			p.read("data", new DSParserFactory());
 			
 			System.out.println("Day of Week");
 			OccupancyAnalyser a = new DayOfWeekAnalysis();
-			a.analyse(p.getAbsoluteOccupancy());
+			a.analyse(p.getAbsoluteOccupancy(args[0]));
+			a.getBoxplot();
 			
-			System.out.println("Day of Month");
-			OccupancyAnalyser b = new DayOfMonthAnalysis();
-		//	b.analyse(p.getAbsoluteOccupancy());
+			System.out.println("Month of Year");
+			OccupancyAnalyser b = new MonthOfYearAnalysis();
+			// b.analyse(p.getAbsoluteOccupancy());
 			
 			System.out.println("Hour of Day");
 			OccupancyAnalyser c = new HourOfDayAnalysis();
-		//	c.analyse(p.getAbsoluteOccupancy());
+			// c.analyse(p.getAbsoluteOccupancy());
 		}
 	}
 }
