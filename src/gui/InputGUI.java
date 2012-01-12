@@ -9,19 +9,28 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import parser.CISParserFactory;
+import parser.DSParserFactory;
+import parser.DataSource;
+import parser.Parser;
+import parser.ParserFactory;
+
 import net.sf.nachocalendar.CalendarFactory;
 import net.sf.nachocalendar.components.DateField;
 
-public class InputGUI implements InputAnalyser {
+public class InputGUI implements InputAnalyser
+{
 
 	public static final int GRAPH_HEIGHT = 300;
 	public static final int GRAPH_WIDTH = 350;
@@ -47,22 +56,48 @@ public class InputGUI implements InputAnalyser {
 
 	private JButton goButton = new JButton("Go");
 
-	public InputGUI() {
+	private List<ParserFactory> factories = new ArrayList<ParserFactory>();
+	private ParserFactory selectedFactory;
+	private Parser parser = new Parser();
+
+	public void addParser(ParserFactory pf)
+	{
+		factories.add(pf);
+	}
+
+	private void setup()
+	{
+
 		mainPanel.setLayout(null);
 		Container contentPane = frame.getContentPane();
 		contentPane.setLayout(null);
 		contentPane.add(mainPanel);
 		mainPanel.setBounds(0, 0, 400, 700);
-		setupLabels();
-		frame.setLocation(4, 4);
-		frame.setSize(375, 170);
-		frame.setResizable(false);
-		frame.setVisible(true);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		selectFileType();
+		
+		if (selectedFactory != null)
+		{
+			setFileLocation();
+			
+			setupLabels();
+	
+			frame.setLocation(4, 4);
+			frame.setSize(375, 170);
+			frame.setResizable(false);
+			frame.setVisible(true);
+			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		}
+		else
+		{
+           frame.dispose();
+		}
 	}
 
-	private void setupLabels() {
-		try {
+	private void setupLabels()
+	{
+		try
+		{
 			mainPanel.add(selectLabLabel);
 			selectLabLabel.setBounds(10, 20, 100, 10);
 			labComboBox = new JComboBox(getLabNames());
@@ -93,57 +128,76 @@ public class InputGUI implements InputAnalyser {
 
 			mainPanel.add(goButton);
 			goButton.setBounds(120, 101, 50, 30);
-			goButton.addActionListener(new GoListener(this, Grapher.getInstance()));
-		} catch (IOException e) {
+			goButton.addActionListener(new GoListener(this, Grapher
+					.getInstance()));
+		} catch (IOException e)
+		{
 		}
 	}
 
-	private String[] getLabNames() throws IOException {
+	private String[] getLabNames() throws IOException
+	{
 		FileReader fileReader = new FileReader("LabNames.txt");
 		BufferedReader bufferedReader = new BufferedReader(fileReader);
 		List<String> labNames = new ArrayList<String>();
 		String line = null;
-		while ((line = bufferedReader.readLine()) != null) {
+		while ((line = bufferedReader.readLine()) != null)
+		{
 			labNames.add(line);
 		}
 		bufferedReader.close();
 		return labNames.toArray(new String[labNames.size()]);
 	}
 
-	private String[] getHours() {
+	private String[] getHours()
+	{
 		List<String> hours = new ArrayList<String>();
-		for (int i = 0; i < 24; i++) {
-			if (i < 10) {
+		for (int i = 0; i < 24; i++)
+		{
+			if (i < 10)
+			{
 				hours.add("0" + Integer.toString(i));
-			} else {
+			} else
+			{
 				hours.add(Integer.toString(i));
 			}
 		}
 		return hours.toArray(new String[hours.size()]);
 	}
 
-	private String[] getMinutes() {
+	private String[] getMinutes()
+	{
 		List<String> minutes = new ArrayList<String>();
-		for (int i = 0; i < MINUTE_INTERVAL; i++) {
+		for (int i = 0; i < MINUTE_INTERVAL; i++)
+		{
 			int minute = 60 / MINUTE_INTERVAL * i;
-			if (minute < 10) {
+			if (minute < 10)
+			{
 				minutes.add("0" + Integer.toString(minute));
-			} else {
+			} else
+			{
 				minutes.add(Integer.toString(minute));
 			}
 		}
 		return minutes.toArray(new String[minutes.size()]);
 	}
 
-	public static void main(String[] args) {
-		new InputGUI();
+	public static void main(String[] args)
+	{
+		InputGUI gui = new InputGUI();
+
+		gui.addParser(new DSParserFactory());
+		gui.addParser(new CISParserFactory());
+		gui.setup();
 	}
 
-	public String getLab() {
+	public String getLab()
+	{
 		return labComboBox.getSelectedItem().toString();
 	}
 
-	public Date getStartDate() {
+	public Date getStartDate()
+	{
 		Date startDate = (Date) startDateField.getValue();
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(startDate);
@@ -157,12 +211,13 @@ public class InputGUI implements InputAnalyser {
 		return calendar.getTime();
 	}
 
-	public Date getEndDate() {
+	public Date getEndDate()
+	{
 		Date endDate = (Date) endDateField.getValue();
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(endDate);
-		calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(endHourComboBox
-				.getSelectedItem().toString()));
+		calendar.set(Calendar.HOUR_OF_DAY,
+				Integer.parseInt(endHourComboBox.getSelectedItem().toString()));
 		calendar.set(Calendar.MINUTE, Integer.parseInt(endMinuteComboBox
 				.getSelectedItem().toString()));
 		calendar.set(Calendar.SECOND, 0);
@@ -170,10 +225,57 @@ public class InputGUI implements InputAnalyser {
 		System.out.println(calendar.getTime());
 		return calendar.getTime();
 	}
-	
-	public void datesWrongOrder() {
+
+	public void datesWrongOrder()
+	{
 		JOptionPane.showMessageDialog(frame,
-	    "End date must be later than start date.");
+				"End date must be later than start date.");
 	}
 
+	private void selectFileType()
+	{
+		Iterator<ParserFactory> it = factories.iterator();
+		String[] factoryStrings = new String[factories.size()];
+
+		int i = 0;
+		while (it.hasNext())
+		{
+			String name = it.next().getName();
+			factoryStrings[i] = name;
+			i++;
+		}
+		
+		String s = null;
+		s = (String) JOptionPane.showInputDialog(frame,
+					"Which format is the data file in?",
+					"Data format chooser", JOptionPane.QUESTION_MESSAGE, null,
+					factoryStrings, null);
+		
+		it = factories.iterator();
+		while (it.hasNext())
+		{
+			ParserFactory factory = it.next();
+			if (s != null && s.equals(factory.getName()))
+			{
+				selectedFactory = factory;
+				break;
+			}
+		}
+	}
+	
+	private void setFileLocation()
+	{
+		JFileChooser chooser = new JFileChooser();
+		chooser.setFileSelectionMode(selectedFactory.getFileSelectionMode());
+		
+		int result = Integer.MAX_VALUE;
+		result = chooser.showOpenDialog(frame);
+		
+		parser.read(chooser.getSelectedFile().getAbsolutePath(), selectedFactory);
+	}
+	
+	public DataSource getDataSource()
+	{
+		return parser;
+	}
 }

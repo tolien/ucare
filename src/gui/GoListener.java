@@ -1,8 +1,6 @@
 package gui;
 
 import graphing.GraphTool;
-import graphing.Grapher;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -18,6 +16,8 @@ public class GoListener implements ActionListener {
 	public GoListener(InputAnalyser input, GraphTool grapher) {
 		this.graphTool = grapher;
 		this.input = input;
+		
+		this.graphTool.setDataSource(input.getDataSource());
 	}
 
 	public void actionPerformed(ActionEvent e) {

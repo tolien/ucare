@@ -2,6 +2,8 @@ package gui;
 
 import java.util.Date;
 
+import parser.DataSource;
+
 public interface InputAnalyser {
 	
 	public String getLab();
@@ -11,5 +13,7 @@ public interface InputAnalyser {
 	public Date getEndDate();
 
 	public void datesWrongOrder();
+	
+	public DataSource getDataSource();
 
 }
