@@ -61,7 +61,7 @@ public class Grapher implements GraphTool {
 
 		DateAxis axis = (DateAxis) plot.getDomainAxis();
 		axis.setDateFormatOverride(new SimpleDateFormat("HH:mm dd/MM/yy"));
-
+		axis.setVerticalTickLabels(true);
 		return chart;
 	}
 
