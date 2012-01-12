@@ -26,6 +26,7 @@ public class Parser implements DataSource
 	
 	public Parser()
 	{
+
 		execService = Executors.newFixedThreadPool(Runtime
 				.getRuntime().availableProcessors());
 		ecs = new ExecutorCompletionService<Occupancy>(execService);
@@ -54,6 +55,7 @@ public class Parser implements DataSource
 			while (futureIt.hasNext())
 			{
 				Occupancy rf = futureIt.next().get();
+				this.files.add(rf);
 				fillLabList(rf.getLabList());
 			}
 			
@@ -65,7 +67,7 @@ public class Parser implements DataSource
 			e.printStackTrace();
 		}
 		
-		execService.shutdown();
+		execService.shutdownNow();
 	}
 
 	private String[] fileList(File dir)
@@ -90,7 +92,8 @@ public class Parser implements DataSource
 		Iterator<Occupancy> it = files.iterator();
 		while (it.hasNext())
 		{
-			result.putAll(it.next().getAbsoluteOccupancy(lab));
+			Occupancy o = it.next();
+			result.putAll(o.getAbsoluteOccupancy(lab));
 		}
 		
 		return result;
