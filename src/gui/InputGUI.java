@@ -1,5 +1,7 @@
 package gui;
 
+import graphing.Grapher;
+
 import java.awt.Container;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -91,7 +93,7 @@ public class InputGUI implements InputAnalyser {
 
 			mainPanel.add(goButton);
 			goButton.setBounds(120, 101, 50, 30);
-			goButton.addActionListener(new GoListener(this));
+			goButton.addActionListener(new GoListener(this, Grapher.getInstance()));
 		} catch (IOException e) {
 		}
 	}

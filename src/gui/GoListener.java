@@ -1,5 +1,8 @@
 package gui;
 
+import graphing.GraphTool;
+import graphing.Grapher;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -8,11 +11,12 @@ import java.util.List;
 
 public class GoListener implements ActionListener {
 	
-	private DummyGraphTool graphTool = new DummyGraphTool();
+	private GraphTool graphTool;
 
 	private InputAnalyser input;
 	
-	public GoListener(InputAnalyser input) {
+	public GoListener(InputAnalyser input, GraphTool grapher) {
+		this.graphTool = grapher;
 		this.input = input;
 	}
 
