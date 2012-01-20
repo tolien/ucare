@@ -1,7 +1,6 @@
 package parser;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -44,8 +43,7 @@ public class CISParser implements FileParser
 
 	}
 
-	@Override
-	public void read() throws IOException
+	private void read()
 	{
 		// TODO Auto-generated method stub
 

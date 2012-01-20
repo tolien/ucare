@@ -2,6 +2,7 @@ package parser;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -64,6 +65,10 @@ public class Parser implements DataSource
 			e.printStackTrace();
 		} catch (InterruptedException e)
 		{
+			e.printStackTrace();
+		} catch (IOException e)
+		{
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

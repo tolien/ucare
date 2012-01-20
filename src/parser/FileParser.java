@@ -6,6 +6,5 @@ import java.util.concurrent.Callable;
 
 public interface FileParser extends Callable<Occupancy>, Occupancy
 {
-	public void setFile(File f);
-	public void read() throws IOException;
+	public void setFile(File f) throws IOException;
 }

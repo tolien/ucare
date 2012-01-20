@@ -1,6 +1,7 @@
 package parser;
 
 import java.io.File;
+import java.io.IOException;
 
 import javax.swing.JFileChooser;
 
@@ -9,7 +10,7 @@ public class CISParserFactory implements ParserFactory
 	private static String name = "CIS lab data";
 	
 	@Override
-	public FileParser getParser(File f)
+	public FileParser getParser(File f) throws IOException
 	{
 		FileParser p = new CISParser();
 		p.setFile(f);

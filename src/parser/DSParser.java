@@ -37,12 +37,13 @@ public class DSParser implements FileParser
 		data = new HashMap<String, Map<Date, Integer>>();
 	}
 	
-	public void setFile(File f)
+	public void setFile(File f) throws IOException
 	{
 		this.file = f;
+		this.read();
 	}
 
-	public void read() throws IOException
+	private void read() throws IOException
 	{
 		String[] nextLine = null;
 		
@@ -76,9 +77,8 @@ public class DSParser implements FileParser
 	}
 
 	@Override
-	public Occupancy call() throws Exception
+	public Occupancy call()
 	{
-		this.read();
 		return this;
 	}	
 	
