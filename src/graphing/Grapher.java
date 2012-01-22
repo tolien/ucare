@@ -15,12 +15,12 @@ import org.jfree.data.time.*;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.ui.RectangleInsets;
 
-import parser.Occupancy;
+import parser.DataSource;
 
 public class Grapher implements GraphTool {
 	private static Grapher instance = null;
 	private TimeSeriesCollection dataSet = null;
-	private Occupancy dataStore;
+	private DataSource dataStore;
 
 	private Grapher() {
 
@@ -33,7 +33,7 @@ public class Grapher implements GraphTool {
 		return instance;
 	}
 	
-	public void setDataSource(Occupancy dataSource){
+	public void setDataSource(DataSource dataSource){
 		dataStore = dataSource;
 	}
 
