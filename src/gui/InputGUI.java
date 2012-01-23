@@ -32,9 +32,6 @@ import net.sf.nachocalendar.components.DateField;
 public class InputGUI implements InputAnalyser
 {
 
-	public static final int GRAPH_HEIGHT = 300;
-	public static final int GRAPH_WIDTH = 350;
-
 	private static final int MINUTE_INTERVAL = 4;
 
 	private JFrame frame = new JFrame("Lab Occupancy Analyser");
@@ -207,7 +204,6 @@ public class InputGUI implements InputAnalyser
 				.getSelectedItem().toString()));
 		calendar.set(Calendar.SECOND, 0);
 		calendar.set(Calendar.MILLISECOND, 0);
-		System.out.println(calendar.getTime());
 		return calendar.getTime();
 	}
 
@@ -222,7 +218,6 @@ public class InputGUI implements InputAnalyser
 				.getSelectedItem().toString()));
 		calendar.set(Calendar.SECOND, 0);
 		calendar.set(Calendar.MILLISECOND, 0);
-		System.out.println(calendar.getTime());
 		return calendar.getTime();
 	}
 
