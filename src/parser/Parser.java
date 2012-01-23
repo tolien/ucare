@@ -47,7 +47,7 @@ public class Parser implements DataSource
 			String[] files = fileList(dir);
 			for (String file : files)
 			{
-				String filename = dir.getName() + File.separator + file;
+				String filename = dir.getCanonicalPath() + File.separator + file;
 				FileParser reader = parser.getParser(new File(filename));
 				futures.add(ecs.submit(reader));
 			}
