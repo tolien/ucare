@@ -4,8 +4,6 @@ import java.util.*;
 
 import occupancy.Utility;
 
-import parser.Parser;
-
 public abstract class Analyser implements OccupancyAnalyser
 {
 	protected Map<Integer, Double> data = new HashMap<Integer, Double>();

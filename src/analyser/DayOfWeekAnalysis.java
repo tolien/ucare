@@ -9,8 +9,6 @@ import java.util.Map;
 
 import occupancy.Utility;
 
-import parser.Parser;
-
 public class DayOfWeekAnalysis extends Analyser
 {
 	private static DateFormatSymbols dfs = new DateFormatSymbols();
