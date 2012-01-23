@@ -10,10 +10,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import au.com.bytecode.opencsv.CSVReader;
 
-public class DSParser implements FileParser
+public class DSParser implements Occupancy
 {
 	public static int LAB_NAME = 0;
 	public static int USERS = 1;

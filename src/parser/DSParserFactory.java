@@ -10,9 +10,9 @@ public class DSParserFactory implements ParserFactory
 	private static String name = "DS Lab data";
 
 	@Override
-	public FileParser getParser(File f) throws IOException
+	public Occupancy getParser(File f) throws IOException
 	{
-		FileParser p = new DSParser();
+		Occupancy p = new DSParser();
 		p.setFile(f);
 		return p;
 	}

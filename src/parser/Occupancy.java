@@ -1,8 +1,9 @@
 package parser;
 
 import java.util.*;
+import java.util.concurrent.Callable;
 
-public interface Occupancy
+public interface Occupancy extends Callable<Occupancy>, FileParser
 {
 	public List<String> getLabList();
 	

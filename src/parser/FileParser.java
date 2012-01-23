@@ -2,9 +2,8 @@ package parser;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.concurrent.Callable;
 
-public interface FileParser extends Callable<Occupancy>, Occupancy
+public interface FileParser
 {
 	public void setFile(File f) throws IOException;
 }

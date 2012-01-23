@@ -10,9 +10,9 @@ public class CISParserFactory implements ParserFactory
 	private static String name = "CIS lab data";
 	
 	@Override
-	public FileParser getParser(File f) throws IOException
+	public Occupancy getParser(File f) throws IOException
 	{
-		FileParser p = new CISParser();
+		Occupancy p = new CISParser();
 		p.setFile(f);
 		return p;
 	}

@@ -36,7 +36,7 @@ public class Parser implements DataSource
 		labs = new ArrayList<String>();
 	}
 	
-	public void read(String directory, ParserFactory parser)
+	public void read(String directory, ParserFactory factory)
 	{
 		try
 		{
@@ -48,7 +48,7 @@ public class Parser implements DataSource
 			for (String file : files)
 			{
 				String filename = dir.getName() + File.separator + file;
-				FileParser reader = parser.getParser(new File(filename));
+				Occupancy reader = factory.getParser(new File(filename));
 				futures.add(ecs.submit(reader));
 			}
 

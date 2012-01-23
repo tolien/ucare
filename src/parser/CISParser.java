@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-public class CISParser implements FileParser
+public class CISParser implements Occupancy
 {
 
 	@Override
