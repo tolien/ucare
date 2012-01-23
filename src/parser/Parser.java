@@ -98,7 +98,9 @@ public class Parser implements DataSource
 		while (it.hasNext())
 		{
 			Occupancy o = it.next();
-			result.putAll(o.getAbsoluteOccupancy(lab));
+			Map<Date, Integer> occupancy = o.getAbsoluteOccupancy(lab);
+			if (occupancy != null && occupancy.size() > 0)
+				result.putAll(occupancy);
 		}
 		
 		return result;
