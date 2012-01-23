@@ -67,7 +67,7 @@ public class Grapher implements GraphTool {
 
 	private void createDataset(String labName, Date start, Date end,
 			Map<Date, Integer> labData) {
-
+		
 		TimeSeries s1 = new TimeSeries(labName);
 		// Ensure dates are in order
 		TreeSet<Date> keys = new TreeSet<Date>(labData.keySet());
@@ -99,7 +99,7 @@ public class Grapher implements GraphTool {
 
 	@Override
 	public void setRequestedData(List<String> labs, Date start, Date end) {
-		dataSet = null;
+		dataSet = new TimeSeriesCollection();
 		for (String string : labs) {
 			Map<Date, Integer> labData = dataStore.getAbsoluteOccupancy(string);
 			createDataset(string, start, end, labData);
