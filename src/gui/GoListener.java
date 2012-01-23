@@ -9,6 +9,9 @@ import java.util.List;
 
 public class GoListener implements ActionListener {
 	
+	private static final int GRAPH_HEIGHT = 800;
+	private static final int GRAPH_WIDTH_INTERVAL = 50;
+	
 	private GraphTool graphTool;
 
 	private InputAnalyser input;
@@ -31,7 +34,8 @@ public class GoListener implements ActionListener {
 			List<String> labs = new ArrayList<String>();
 			labs.add(lab);
 			graphTool.setRequestedData(labs, startDate, endDate);
-			new GraphGUI(graphTool.getGraph(InputGUI.GRAPH_WIDTH-1, InputGUI.GRAPH_HEIGHT-1));
+			int days = (int)( (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+			new GraphGUI(graphTool.getGraph(GRAPH_WIDTH_INTERVAL * days, GRAPH_HEIGHT-1));
 		}
 	}
 
