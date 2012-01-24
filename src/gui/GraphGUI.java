@@ -19,6 +19,7 @@ public class GraphGUI {
 	public GraphGUI(JPanel graph) {
 		graph.setBackground(Color.WHITE);
 		scrollPane = new JScrollPane(graph);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.add(scrollPane, BorderLayout.CENTER);
 		frame.pack();
 		int minWidth = MIN_WIDTH;
