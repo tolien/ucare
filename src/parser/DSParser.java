@@ -30,15 +30,11 @@ public class DSParser implements Occupancy
 	private File file;
 
 	private Map<String, Map<Date, Integer>> data;
-
-	public DSParser()
-	{
-		data = new HashMap<String, Map<Date, Integer>>();
-	}
 	
 	public void setFile(File f) throws IOException
 	{
 		this.file = f;
+		data = new HashMap<String, Map<Date, Integer>>();
 		this.read();
 	}
 
