@@ -29,12 +29,12 @@ public class DSParser implements Occupancy
 	
 	private File file;
 
-	private Map<String, Map<Date, Integer>> data;
+	private Map<String, Map<Date, Double>> data;
 	
 	public void setFile(File f) throws IOException
 	{
 		this.file = f;
-		data = new HashMap<String, Map<Date, Integer>>();
+		data = new HashMap<String, Map<Date, Double>>();
 		this.read();
 	}
 
@@ -56,11 +56,11 @@ public class DSParser implements Occupancy
 							+ nextLine[TIME]);
 
 					String labName = (String) nextLine[LAB_NAME];
-					Integer occupancy = Integer.parseInt((String) nextLine[DSParser.USERS]);
+					Double occupancy = Double.parseDouble((String) nextLine[DSParser.USERS]);
 					
-					Map<Date, Integer> labData = data.remove(labName);
+					Map<Date, Double> labData = data.remove(labName);
 					if (labData == null)
-						labData = new HashMap<Date, Integer>();
+						labData = new HashMap<Date, Double>();
 					labData.put(time,  occupancy);
 					data.put(labName, labData);
 				}
@@ -77,12 +77,12 @@ public class DSParser implements Occupancy
 		return this;
 	}	
 	
-	public Map<Date, Integer> getAbsoluteOccupancy(String lab)
+	public Map<Date, Double> getAbsoluteOccupancy(String lab)
 	{
 		return data.get(lab);
 	}
 	
-	public Map<Date, Float> getRelativeOccupancy(String lab)
+	public Map<Date, Double> getRelativeOccupancy(String lab)
 	{
 		return null;
 	}

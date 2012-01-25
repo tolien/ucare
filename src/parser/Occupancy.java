@@ -7,6 +7,6 @@ public interface Occupancy extends Callable<Occupancy>, FileParser
 {
 	public List<String> getLabList();
 	
-	public Map<Date, Integer> getAbsoluteOccupancy(String lab);
-	public Map<Date, Float>	getRelativeOccupancy(String lab);
+	public Map<Date, Double> getAbsoluteOccupancy(String lab);
+	public Map<Date, Double> getRelativeOccupancy(String lab);
 }

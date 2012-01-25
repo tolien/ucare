@@ -47,7 +47,7 @@ public class Parser implements DataSource
 			String[] files = fileList(dir);
 			for (String file : files)
 			{
-				String filename = dir.getName() + File.separator + file;
+				String filename = dir.getCanonicalPath() + File.separator + file;
 				Occupancy reader = factory.getParser(new File(filename));
 				futures.add(ecs.submit(reader));
 			}
@@ -90,24 +90,26 @@ public class Parser implements DataSource
 	}
 
 	@Override
-	public Map<Date, Integer> getAbsoluteOccupancy(String lab)
+	public Map<Date, Double> getAbsoluteOccupancy(String lab)
 	{
-		Map<Date, Integer> result = new HashMap<Date, Integer>();
+		Map<Date, Double> result = new HashMap<Date, Double>();
 		
 		Iterator<Occupancy> it = files.iterator();
 		while (it.hasNext())
 		{
 			Occupancy o = it.next();
-			result.putAll(o.getAbsoluteOccupancy(lab));
+			Map<Date, Double> occupancy = o.getAbsoluteOccupancy(lab);
+			if (occupancy != null && occupancy.size() > 0)
+				result.putAll(occupancy);
 		}
 		
 		return result;
 	}
 	
 	@Override
-	public Map<Date, Float> getRelativeOccupancy(String lab)
+	public Map<Date, Double> getRelativeOccupancy(String lab)
 	{
-		Map<Date, Float> result = new HashMap<Date, Float>();
+		Map<Date, Double> result = new HashMap<Date, Double>();
 		
 		Iterator<Occupancy> it = files.iterator();
 		while (it.hasNext())

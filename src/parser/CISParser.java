@@ -23,14 +23,14 @@ public class CISParser implements Occupancy
 	}
 
 	@Override
-	public Map<Date, Integer> getAbsoluteOccupancy(String lab)
+	public Map<Date, Double> getAbsoluteOccupancy(String lab)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Map<Date, Float> getRelativeOccupancy(String lab)
+	public Map<Date, Double> getRelativeOccupancy(String lab)
 	{
 		// TODO Auto-generated method stub
 		return null;

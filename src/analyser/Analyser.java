@@ -25,9 +25,9 @@ public abstract class Analyser implements OccupancyAnalyser
 		return data;
 	}
 	
-	public void analyse(Map<Date, Integer> points)
+	public void analyse(Map<Date, Double> points)
 	{
-		HashMap<Integer, List<Integer>> totals = new HashMap<Integer, List<Integer>>();
+		HashMap<Integer, List<Double>> totals = new HashMap<Integer, List<Double>>();
 
 		Iterator<Date> it = points.keySet().iterator();
 		Calendar c = Calendar.getInstance();
@@ -40,10 +40,10 @@ public abstract class Analyser implements OccupancyAnalyser
 
 			if (selectData(d))
 			{
-				List<Integer> dataForInterval = totals.remove(intervalID);
+				List<Double> dataForInterval = totals.remove(intervalID);
 				if (dataForInterval == null)
 				{
-					dataForInterval = new ArrayList<Integer>();
+					dataForInterval = new ArrayList<Double>();
 				}
 				dataForInterval.add(points.get(d));
 				totals.put(intervalID, dataForInterval);
@@ -54,20 +54,20 @@ public abstract class Analyser implements OccupancyAnalyser
 		while (intervalIterator.hasNext())
 		{
 			int interval = intervalIterator.next();
-			List<Integer> intervalData = totals.get(interval);
+			List<Double> intervalData = totals.get(interval);
 			data.put(interval, summarisationStep(intervalData));
 		}
 		
 		this.getResult();
 	}
 	
-	protected Double sum(List<Integer> list)
+	protected Double sum(List<Double> list)
 	{
 		double sum = 0.0;
 
 		if (list != null)
 		{
-			Iterator<Integer> it = list.iterator();
+			Iterator<Double> it = list.iterator();
 			while (it.hasNext())
 			{
 				sum += it.next();
@@ -77,14 +77,14 @@ public abstract class Analyser implements OccupancyAnalyser
 		return sum;
 	}
 	
-	protected Double max(List<Integer> list)
+	protected Double max(List<Double> list)
 	{
 		double max = Integer.MIN_VALUE;
-		Iterator<Integer> it = list.iterator();
+		Iterator<Double> it = list.iterator();
 		
 		while (it.hasNext())
 		{
-			Integer i = it.next();
+			Double i = it.next();
 			if (i > max)
 			{
 				max = i + 0.0;
@@ -111,7 +111,7 @@ public abstract class Analyser implements OccupancyAnalyser
 		return (min != Integer.MAX_VALUE) ? min : null;
 	}
 	
-	protected Double quartile(List<Integer> list, Integer quartile)
+	protected Double quartile(List<Double> list, Integer quartile)
 	{		
 		list = Utility.asSortedList(list);
 		
@@ -121,7 +121,7 @@ public abstract class Analyser implements OccupancyAnalyser
 		return list.get(n) + 0.0;
 	}
 	
-	protected Double average(List<Integer> list)
+	protected Double average(List<Double> list)
 	{
 		if (list.size() > 0)
 		{
@@ -133,7 +133,7 @@ public abstract class Analyser implements OccupancyAnalyser
 		}
 	}
 
-	protected Double summarisationStep(List<Integer> data)
+	protected Double summarisationStep(List<Double> data)
 	{
 		return max(data);
 	}
