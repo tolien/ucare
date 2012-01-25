@@ -18,9 +18,9 @@ import java.util.*;
  */
 public class AnalyserTest extends Analyser
 {
-	private List<Integer> empty;
-	private List<Integer> one;
-	private List<Integer> more;
+	private List<Double> empty;
+	private List<Double> one;
+	private List<Double> more;
 	
 	/**
 	 * @throws java.lang.Exception
@@ -28,14 +28,14 @@ public class AnalyserTest extends Analyser
 	@Before
 	public void setUp() throws Exception
 	{
-		empty = new ArrayList<Integer>();
-		one = new ArrayList<Integer>();
-		one.add(12);
+		empty = new ArrayList<Double>();
+		one = new ArrayList<Double>();
+		one.add(12.0);
 		
-		more = new ArrayList<Integer>();
-		more.add(0);
-		more.add(3);
-		more.add(6);
+		more = new ArrayList<Double>();
+		more.add(0.0);
+		more.add(3.0);
+		more.add(6.0);
 	}
 
 	/**
