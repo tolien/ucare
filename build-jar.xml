@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Create Runnable Jar for Project LabActivityParser">
+    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
+    <!--ANT 1.7 is required                                        -->
+    <target name="create_run_jar">
+        <jar destfile="parser.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+                <attribute name="Main-Class" value="gui.InputGUI"/>
+                <attribute name="Class-Path" value="."/>
+            </manifest>
+            <fileset dir="bin"/>
+            <file file="LabNames.txt" />
+            <zipfileset excludes="META-INF/*.SF" src="lib/jcommon-1.0.17.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="lib/jfreechart-1.0.14.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="lib/nachocalendar-0.23.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="lib/nachocalendar-0.23-demo.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="lib/opencsv-2.3.jar"/>
+        </jar>
+    </target>
+</project>

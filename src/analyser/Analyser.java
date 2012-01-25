@@ -94,14 +94,14 @@ public abstract class Analyser implements OccupancyAnalyser
 		return (max != Integer.MIN_VALUE) ? max : null;
 	}
 	
-	protected Double min(List<Integer> list)
+	protected Double min(List<Double> list)
 	{
 		double min = Integer.MAX_VALUE;
-		Iterator<Integer> it = list.iterator();
+		Iterator<Double> it = list.iterator();
 		
 		while (it.hasNext())
 		{
-			Integer i = it.next();
+			Double i = it.next();
 			if (i < min)
 			{
 				min = i + 0.0;

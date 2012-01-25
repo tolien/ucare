@@ -18,7 +18,7 @@ public class LabActvityParser
 			System.out.println("Day of Week");
 			OccupancyAnalyser a = new DayOfWeekAnalysis();
 			a.analyse(p.getAbsoluteOccupancy(args[0]));
-			a.getBoxplot();
+			//a.getBoxplot();
 			
 			System.out.println("Month of Year");
 			OccupancyAnalyser b = new MonthOfYearAnalysis();
