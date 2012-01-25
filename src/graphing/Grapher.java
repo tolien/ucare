@@ -19,7 +19,8 @@ import parser.DataSource;
 
 public class Grapher implements GraphTool {
 	private static Grapher instance = null;
-	private TimeSeriesCollection dataSet = null;
+	private TimeSeriesCollection occupancy = null;
+	private TimeSeriesCollection power = null;
 	private DataSource dataStore;
 
 	private Grapher() {
@@ -37,13 +38,13 @@ public class Grapher implements GraphTool {
 		dataStore = dataSource;
 	}
 
-	private static JFreeChart createChart(XYDataset dataset) {
+	private static JFreeChart createChart(XYDataset occupancy, XYDataset power) {
 
 		JFreeChart chart = ChartFactory.createTimeSeriesChart(
-				"Lab Usage Data", // title
+				"Lab Useage Data", // title
 				"Date", // x-axis label
 				"Occupants", // y-axis label
-				dataset, // data
+				occupancy, // data
 				true, // create legend?
 				true, // generate tooltips?
 				false // generate URLs?
@@ -58,6 +59,12 @@ public class Grapher implements GraphTool {
 		plot.setAxisOffset(new RectangleInsets(5.0, 5.0, 5.0, 5.0));
 		plot.setDomainCrosshairVisible(true);
 		plot.setRangeCrosshairVisible(true);
+		
+        final NumberAxis powerAxis = new NumberAxis("Power usage (KWH)");
+        powerAxis.setAutoRangeIncludesZero(false);
+        plot.setRangeAxis(1, powerAxis);
+        plot.setDataset(1, power);
+        plot.mapDatasetToRangeAxis(1, 1);
 
 		DateAxis axis = (DateAxis) plot.getDomainAxis();
 		axis.setDateFormatOverride(new SimpleDateFormat("HH:mm dd/MM/yy"));
@@ -66,7 +73,7 @@ public class Grapher implements GraphTool {
 	}
 
 	private void createDataset(String labName, Date start, Date end,
-			Map<Date, Double> labData) {
+			Map<Date, Double> labData, TimeSeriesCollection dataset) {
 		
 		TimeSeries s1 = new TimeSeries(labName);
 		// Ensure dates are in order
@@ -80,15 +87,15 @@ public class Grapher implements GraphTool {
 			}
 		}
 
-		dataSet.addSeries(s1);
+		dataset.addSeries(s1);
 
 	}
 
 	@Override
 	public JPanel getGraph(int xSize, int ySize) {
 		// TODO make proper exception
-		if (dataSet != null) {
-			JFreeChart chart = createChart(dataSet);
+		if (occupancy != null&&power!=null) {
+			JFreeChart chart = createChart(occupancy, power);
 			ChartPanel chartPanel = new ChartPanel(chart, false);
 			chartPanel.setPreferredSize(new java.awt.Dimension(xSize, ySize));
 			return chartPanel;
@@ -99,10 +106,15 @@ public class Grapher implements GraphTool {
 
 	@Override
 	public void setRequestedData(List<String> labs, Date start, Date end) {
-		dataSet = new TimeSeriesCollection();
+		power = new TimeSeriesCollection();
+		occupancy = new TimeSeriesCollection();
 		for (String string : labs) {
 			Map<Date, Double> labData = dataStore.getAbsoluteOccupancy(string);
-			createDataset(string, start, end, labData);
+			createDataset(string, start, end, labData, occupancy);
+			
+			Map<Date, Double> labPower = dataStore.getPower(string);
+			createDataset(string, start, end, labPower, power);
+			
 		}
 	}
 
