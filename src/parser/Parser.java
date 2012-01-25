@@ -90,15 +90,15 @@ public class Parser implements DataSource
 	}
 
 	@Override
-	public Map<Date, Integer> getAbsoluteOccupancy(String lab)
+	public Map<Date, Double> getAbsoluteOccupancy(String lab)
 	{
-		Map<Date, Integer> result = new HashMap<Date, Integer>();
+		Map<Date, Double> result = new HashMap<Date, Double>();
 		
 		Iterator<Occupancy> it = files.iterator();
 		while (it.hasNext())
 		{
 			Occupancy o = it.next();
-			Map<Date, Integer> occupancy = o.getAbsoluteOccupancy(lab);
+			Map<Date, Double> occupancy = o.getAbsoluteOccupancy(lab);
 			if (occupancy != null && occupancy.size() > 0)
 				result.putAll(occupancy);
 		}
@@ -107,9 +107,9 @@ public class Parser implements DataSource
 	}
 	
 	@Override
-	public Map<Date, Float> getRelativeOccupancy(String lab)
+	public Map<Date, Double> getRelativeOccupancy(String lab)
 	{
-		Map<Date, Float> result = new HashMap<Date, Float>();
+		Map<Date, Double> result = new HashMap<Date, Double>();
 		
 		Iterator<Occupancy> it = files.iterator();
 		while (it.hasNext())

@@ -66,7 +66,7 @@ public class Grapher implements GraphTool {
 	}
 
 	private void createDataset(String labName, Date start, Date end,
-			Map<Date, Integer> labData) {
+			Map<Date, Double> labData) {
 		
 		TimeSeries s1 = new TimeSeries(labName);
 		// Ensure dates are in order
@@ -101,7 +101,7 @@ public class Grapher implements GraphTool {
 	public void setRequestedData(List<String> labs, Date start, Date end) {
 		dataSet = new TimeSeriesCollection();
 		for (String string : labs) {
-			Map<Date, Integer> labData = dataStore.getAbsoluteOccupancy(string);
+			Map<Date, Double> labData = dataStore.getAbsoluteOccupancy(string);
 			createDataset(string, start, end, labData);
 		}
 	}

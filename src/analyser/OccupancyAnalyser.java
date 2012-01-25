@@ -4,6 +4,6 @@ import java.util.*;
 
 public interface OccupancyAnalyser
 {	
-	public void analyse(Map<Date, Integer> points);
+	public void analyse(Map<Date, Double> points);
 	public Map<Integer, Double> getResult();
 }
