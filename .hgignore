@@ -3,3 +3,5 @@ syntax: glob
 data
 .git*
 bin/*
+parser.jar
+run.bat
