@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -21,6 +22,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+
+import occupancy.Utility;
 
 import parser.CISParserFactory;
 import parser.DSParserFactory;
@@ -97,63 +100,55 @@ public class InputGUI implements InputAnalyser {
 	}
 
 	private void setupGUI() {
-		try {
-			mainPanel.add(selectLabLabel);
-			selectLabLabel.setBounds(10, 20, 100, 10);
-			labComboBox = new JComboBox(getLabNames());
-			mainPanel.add(labComboBox);
-			labComboBox.setBounds(120, 15, 230, 20);
+		mainPanel.add(selectLabLabel);
+		selectLabLabel.setBounds(10, 20, 100, 10);
+		labComboBox = new JComboBox(getLabNames());
+		mainPanel.add(labComboBox);
+		labComboBox.setBounds(120, 15, 230, 20);
 
-			mainPanel.add(startDateLabel);
-			startDateLabel.setBounds(10, 50, 100, 10);
-			mainPanel.add(startDateField);
-			startDateField.setBounds(120, 45, 100, 20);
-			startHourComboBox = new JComboBox(getHours());
-			mainPanel.add(startHourComboBox);
-			startHourComboBox.setBounds(230, 45, 40, 20);
-			startMinuteComboBox = new JComboBox(getMinutes());
-			mainPanel.add(startMinuteComboBox);
-			startMinuteComboBox.setBounds(280, 45, 40, 20);
+		mainPanel.add(startDateLabel);
+		startDateLabel.setBounds(10, 50, 100, 10);
+		mainPanel.add(startDateField);
+		startDateField.setBounds(120, 45, 100, 20);
+		startHourComboBox = new JComboBox(getHours());
+		mainPanel.add(startHourComboBox);
+		startHourComboBox.setBounds(230, 45, 40, 20);
+		startMinuteComboBox = new JComboBox(getMinutes());
+		mainPanel.add(startMinuteComboBox);
+		startMinuteComboBox.setBounds(280, 45, 40, 20);
 
-			mainPanel.add(endDateLabel);
-			endDateLabel.setBounds(10, 78, 100, 10);
-			mainPanel.add(endDateField);
-			endDateField.setBounds(120, 73, 100, 20);
-			endHourComboBox = new JComboBox(getHours());
-			mainPanel.add(endHourComboBox);
-			endHourComboBox.setBounds(230, 73, 40, 20);
-			endMinuteComboBox = new JComboBox(getMinutes());
-			mainPanel.add(endMinuteComboBox);
-			endMinuteComboBox.setBounds(280, 73, 40, 20);
-			
-			mainPanel.add(dataTypeLabel);
-			dataTypeLabel.setBounds(10, 103, 100, 15);
-			buttonGroup.add(rawButton);
-			buttonGroup.add(analysedButton);
-			analysedButton.setSelected(true);
-			mainPanel.add(rawButton);
-			rawButton.setBounds(117, 104, 50, 15);
-			mainPanel.add(analysedButton);
-			analysedButton.setBounds(167, 104, 100, 15);
+		mainPanel.add(endDateLabel);
+		endDateLabel.setBounds(10, 78, 100, 10);
+		mainPanel.add(endDateField);
+		endDateField.setBounds(120, 73, 100, 20);
+		endHourComboBox = new JComboBox(getHours());
+		mainPanel.add(endHourComboBox);
+		endHourComboBox.setBounds(230, 73, 40, 20);
+		endMinuteComboBox = new JComboBox(getMinutes());
+		mainPanel.add(endMinuteComboBox);
+		endMinuteComboBox.setBounds(280, 73, 40, 20);
+		
+		mainPanel.add(dataTypeLabel);
+		dataTypeLabel.setBounds(10, 103, 100, 15);
+		buttonGroup.add(rawButton);
+		buttonGroup.add(analysedButton);
+		analysedButton.setSelected(true);
+		mainPanel.add(rawButton);
+		rawButton.setBounds(117, 104, 50, 15);
+		mainPanel.add(analysedButton);
+		analysedButton.setBounds(167, 104, 100, 15);
 
-			mainPanel.add(goButton);
-			goButton.setBounds(120, 131, 50, 30);
-			goButton.addActionListener(new GoListener(this, Grapher
-					.getInstance()));
-		} catch (IOException e) {
-		}
+		mainPanel.add(goButton);
+		goButton.setBounds(120, 131, 50, 30);
+		goButton.addActionListener(new GoListener(this, Grapher
+				.getInstance()));
 	}
 
-	private String[] getLabNames() throws IOException {
-		FileReader fileReader = new FileReader("LabNames.txt");
-		BufferedReader bufferedReader = new BufferedReader(fileReader);
-		List<String> labNames = new ArrayList<String>();
-		String line = null;
-		while ((line = bufferedReader.readLine()) != null) {
-			labNames.add(line);
-		}
-		bufferedReader.close();
-		return labNames.toArray(new String[labNames.size()]);
+	private String[] getLabNames() {
+		List<String> names = parser.getLabList();
+		names = Utility.asSortedList(names);
+		
+		return names.toArray(new String[0]);
 	}
 
 	private String[] getHours() {
