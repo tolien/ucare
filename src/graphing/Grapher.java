@@ -42,7 +42,7 @@ public class Grapher implements GraphTool {
 	private static JFreeChart createChart(XYDataset occupancy, XYDataset power) {
 
 		JFreeChart chart = ChartFactory.createTimeSeriesChart(
-				"Lab Useage Data", // title
+				"Lab Usage Data", // title
 				"Date", // x-axis label
 				"Occupants", // y-axis label
 				occupancy, // data
