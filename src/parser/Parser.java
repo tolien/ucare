@@ -137,4 +137,11 @@ public class Parser implements DataSource
 				labs.add(needle);
 		}
 	}
+
+	@Override
+	public Map<Date, Double> getPower(String string)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

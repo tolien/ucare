@@ -114,7 +114,8 @@ public class Grapher implements GraphTool {
 			createDataset(string, start, end, labData, occupancy);
 			
 			Map<Date, Double> labPower = dataStore.getPower(string);
-			createDataset(string, start, end, labPower, power);
+			if (labPower != null)
+				createDataset(string, start, end, labPower, power);
 			
 		}
 	}
