@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
 import au.com.bytecode.opencsv.CSVReader;
 
 public class DSParser implements Occupancy
@@ -31,11 +33,10 @@ public class DSParser implements Occupancy
 
 	private Map<String, Map<Date, Double>> data;
 	
-	public void setFile(File f) throws IOException
+	public void setFile(File f)
 	{
 		this.file = f;
 		data = new HashMap<String, Map<Date, Double>>();
-		this.read();
 	}
 
 	private void read() throws IOException
@@ -74,6 +75,14 @@ public class DSParser implements Occupancy
 	@Override
 	public Occupancy call()
 	{
+		try
+		{
+			this.read();
+		} catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return this;
 	}	
 	
@@ -98,6 +107,25 @@ public class DSParser implements Occupancy
 		}
 		
 		return list;
+	}
+
+	@Override
+	public Map<Date, Double> getAbsoluteOccupancy(String lab, Date start,
+			Date end)
+	{
+		Map<Date, Double> result = data.get(lab);
+		
+		Set<Date> keys = result.keySet();
+		Iterator<Date> keyIt = keys.iterator();
+		while (keyIt.hasNext())
+		{
+			Date d = keyIt.next();
+			if (d.compareTo(start) < 0 || d.compareTo(end) > 0)
+			{
+				return null;
+			}
+		}
+		return result;
 	}
 	
 }

@@ -9,6 +9,8 @@ public interface DataSource
 	public Map<Date, Double> getAbsoluteOccupancy(String labName);	
 	public Map<Date, Double> getRelativeOccupancy(String labName);
 	
+	public Map<Date, Double> getAbsoluteOccupancy(String labName, Date start, Date end);
+	
 	public List<String> getLabList();
 
 	public Map<Date, Double> getPower(String string);	
