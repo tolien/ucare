@@ -49,4 +49,12 @@ public class CISParser implements Occupancy
 
 	}
 
+	@Override
+	public Map<Date, Double> getAbsoluteOccupancy(String lab, Date start,
+			Date end)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

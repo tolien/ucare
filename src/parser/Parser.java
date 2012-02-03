@@ -144,4 +144,22 @@ public class Parser implements DataSource
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public Map<Date, Double> getAbsoluteOccupancy(String labName, Date start,
+			Date end)
+	{
+		Map<Date, Double> result = new HashMap<Date, Double>();
+		
+		Iterator<Occupancy> it = files.iterator();
+		while (it.hasNext())
+		{
+			Occupancy o = it.next();
+			Map<Date, Double> occupancy = o.getAbsoluteOccupancy(labName, start, end);
+			if (occupancy != null && occupancy.size() > 0)
+				result.putAll(occupancy);
+		}
+		
+		return result;
+	}
 }
