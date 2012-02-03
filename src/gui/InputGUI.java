@@ -176,7 +176,7 @@ public class InputGUI implements InputAnalyser {
 		InputGUI gui = new InputGUI();
 
 		gui.addParser(new DSParserFactory());
-		gui.addParser(new CISParserFactory());
+		// gui.addParser(new CISParserFactory());
 		gui.setup();
 	}
 
@@ -216,28 +216,36 @@ public class InputGUI implements InputAnalyser {
 	}
 
 	private void selectFileType() {
-		Iterator<ParserFactory> it = factories.iterator();
-		String[] factoryStrings = new String[factories.size()];
-
-		int i = 0;
-		while (it.hasNext()) {
-			String name = it.next().getName();
-			factoryStrings[i] = name;
-			i++;
-		}
-
-		String s = null;
-		s = (String) JOptionPane.showInputDialog(frame,
-				"Which format is the data file in?", "Data format chooser",
-				JOptionPane.QUESTION_MESSAGE, null, factoryStrings, null);
-
-		it = factories.iterator();
-		while (it.hasNext()) {
-			ParserFactory factory = it.next();
-			if (s != null && s.equals(factory.getName())) {
-				selectedFactory = factory;
-				break;
+		if (factories.size() > 1)
+		{
+			Iterator<ParserFactory> it = factories.iterator();
+			
+			String[] factoryStrings = new String[factories.size()];
+	
+			int i = 0;
+			while (it.hasNext()) {
+				String name = it.next().getName();
+				factoryStrings[i] = name;
+				i++;
 			}
+	
+			String s = null;
+			s = (String) JOptionPane.showInputDialog(frame,
+					"Which format is the data file in?", "Data format chooser",
+					JOptionPane.QUESTION_MESSAGE, null, factoryStrings, null);
+	
+			it = factories.iterator();
+			while (it.hasNext()) {
+				ParserFactory factory = it.next();
+				if (s != null && s.equals(factory.getName())) {
+					selectedFactory = factory;
+					break;
+				}
+			}
+		}
+		else if (factories.size() == 1)
+		{
+			selectedFactory = factories.get(0);
 		}
 	}
 
