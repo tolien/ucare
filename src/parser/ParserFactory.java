@@ -6,6 +6,7 @@ import java.io.IOException;
 public interface ParserFactory
 {
 	public Occupancy getParser(File f) throws IOException;
+	public Power getPowerParser(File f) throws IOException;
 	
 	public String getName();
 	

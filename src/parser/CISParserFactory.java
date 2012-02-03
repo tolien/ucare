@@ -27,4 +27,10 @@ public class CISParserFactory implements ParserFactory
 	{
 		return JFileChooser.FILES_ONLY;
 	}
+
+	@Override
+	public Power getPowerParser(File f) throws IOException
+	{
+		return null;
+	}
 }

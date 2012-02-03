@@ -16,6 +16,14 @@ public class DSParserFactory implements ParserFactory
 		p.setFile(f);
 		return p;
 	}
+	
+	@Override
+	public Power getPowerParser(File f) throws IOException
+	{
+		Power p = new DSPowerParser();
+		p.setFile(f);
+		return p;
+	}
 
 	@Override
 	public String getName()
