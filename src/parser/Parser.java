@@ -63,8 +63,6 @@ public class Parser implements DataSource
 				fillLabList(rf.getLabList());
 			}
 			
-			dir = new File(dir.getCanonicalPath() + File.separator + ".." + File.separator + "power");
-			
 			files = fileList(dir, ".csv");
 			for (String file : files)
 			{
