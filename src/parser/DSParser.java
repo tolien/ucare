@@ -1,8 +1,10 @@
 package parser;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,6 +13,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import occupancy.Utility;
 
 import au.com.bytecode.opencsv.CSVReader;
 
@@ -29,65 +33,101 @@ public class DSParser implements Occupancy
 	public Date maxTime;
 	public int max = 0;
 	
-	private File file;
+	private CSVReader reader;
 
 	private Map<String, Map<Date, Double>> data;
 	
-	public void setFile(File f)
+	public void setFile(File f) throws FileNotFoundException
 	{
-		this.file = f;
 		data = new HashMap<String, Map<Date, Double>>();
+
+		FileReader fr = new FileReader(f);
+		reader = new CSVReader(fr);
 	}
 
-	private void read() throws IOException
+	private void read(int sets)
 	{
+		for (int loops = 0; loops < sets; loops++)
+		{
+			Map<String, Map<Date, Double>> set = readSet();
+			data.putAll(set);
+		}
+	}
+	
+	private void read(String lab)
+	{
+		Map<String, Map<Date, Double>> set = readSet();
+
+		Map<Date, Double> existing = data.get(lab);
+		
+		if (existing == null)
+			existing = new HashMap<Date, Double>();
+		
+		if (set != null && set.get(lab) != null)
+			existing.putAll(set.get(lab));
+
+			data.put(lab, existing);
+		while (set.size() > 0)
+		{
+			set = readSet();
+			if (set != null && set.size() > 0)
+			{
+				existing = data.get(lab);
+				existing.putAll(set.get(lab));
+				data.put(lab, existing);
+			}
+		}
+	}
+	
+	
+	private Map<String, Map<Date, Double>> readSet()
+	{
+		Map<String, Map<Date, Double>> data = new HashMap<String, Map<Date, Double>>();
 		String[] nextLine = null;
 		
 		try
 		{
-			FileReader fr = new FileReader(file);
-
-			CSVReader reader = new CSVReader(fr);
-			
-			while ((nextLine = reader.readNext()) != null)
+			while ((nextLine = reader.readNext()) != null && nextLine.length > 1)
 			{
-				if (nextLine.length > 1)
-				{
-					Date time = dateFormatter.parse(nextLine[DATE] + " "
+				Date time;
+				time = dateFormatter.parse(nextLine[DATE] + " "
 							+ nextLine[TIME]);
 
-					String labName = (String) nextLine[LAB_NAME];
-					Double occupancy = Double.parseDouble((String) nextLine[DSParser.USERS]);
+				String labName = (String) nextLine[LAB_NAME];
+				Double occupancy = Double.parseDouble((String) nextLine[DSParser.USERS]);
+				
+				Map<Date, Double> labData = (data.get(labName) == null) ? new HashMap<Date, Double>() : data.get(labName);
+				labData.put(time,  occupancy);
+				data.put(labName, labData);
 					
-					Map<Date, Double> labData = data.remove(labName);
-					if (labData == null)
-						labData = new HashMap<Date, Double>();
-					labData.put(time,  occupancy);
-					data.put(labName, labData);
-				}
 			}
-		} catch (Exception e)
+		} catch (NumberFormatException e)
 		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}catch (ParseException e)
+		{
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+		return data;
 	}
 
 	@Override
 	public Occupancy call()
 	{
-		try
-		{
-			this.read();
-		} catch (IOException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		this.read(1);
 		return this;
 	}	
 	
 	public Map<Date, Double> getAbsoluteOccupancy(String lab)
 	{
+		read(lab);
 		return data.get(lab);
 	}
 	
@@ -113,6 +153,7 @@ public class DSParser implements Occupancy
 	public Map<Date, Double> getAbsoluteOccupancy(String lab, Date start,
 			Date end)
 	{
+		read(lab);
 		Map<Date, Double> result = data.get(lab);
 		
 		Set<Date> keys = result.keySet();

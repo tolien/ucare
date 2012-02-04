@@ -90,8 +90,6 @@ public class Parser implements DataSource
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		execService.shutdownNow();
 	}
 
 	private String[] fileList(File dir, String ext)
@@ -112,15 +110,34 @@ public class Parser implements DataSource
 	@Override
 	public Map<Date, Double> getAbsoluteOccupancy(String lab)
 	{
+		CompletionService<Map<Date, Double>> cs = new ExecutorCompletionService<Map<Date, Double>>(execService);
+		
 		Map<Date, Double> result = new HashMap<Date, Double>();
 		
 		Iterator<Occupancy> it = occupancyFiles.iterator();
 		while (it.hasNext())
 		{
-			Occupancy o = it.next();
-			Map<Date, Double> occupancy = o.getAbsoluteOccupancy(lab);
-			if (occupancy != null && occupancy.size() > 0)
-				result.putAll(occupancy);
+			cs.submit(new OccupancyFetcher(it.next(), lab));
+		}
+		
+		for (int i = 0; i < occupancyFiles.size(); i++)
+		{
+			Map<Date, Double> occupancy;
+			try
+			{
+				occupancy = cs.take().get();
+				if (occupancy != null && occupancy.size() > 0)
+					result.putAll(occupancy);
+				
+			} catch (InterruptedException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ExecutionException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		return result;
@@ -181,15 +198,34 @@ public class Parser implements DataSource
 	public Map<Date, Double> getAbsoluteOccupancy(String labName, Date start,
 			Date end)
 	{
+		CompletionService<Map<Date, Double>> cs = new ExecutorCompletionService<Map<Date, Double>>(execService);
+		
 		Map<Date, Double> result = new HashMap<Date, Double>();
 		
 		Iterator<Occupancy> it = occupancyFiles.iterator();
 		while (it.hasNext())
 		{
-			Occupancy o = it.next();
-			Map<Date, Double> occupancy = o.getAbsoluteOccupancy(labName, start, end);
-			if (occupancy != null && occupancy.size() > 0)
-				result.putAll(occupancy);
+			cs.submit(new OccupancyFetcher(it.next(), labName, start, end));
+		}
+		
+		for (int i = 0; i < occupancyFiles.size(); i++)
+		{
+			Map<Date, Double> occupancy;
+			try
+			{
+				occupancy = cs.take().get();
+				if (occupancy != null && occupancy.size() > 0)
+					result.putAll(occupancy);
+				
+			} catch (InterruptedException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ExecutionException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		return result;
