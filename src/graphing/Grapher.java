@@ -62,7 +62,7 @@ public class Grapher implements GraphTool {
 		plot.setDomainCrosshairVisible(true);
 		plot.setRangeCrosshairVisible(true);
 		
-        final NumberAxis powerAxis = new NumberAxis("Power usage (KW)");
+        final NumberAxis powerAxis = new NumberAxis("Power (kW)");
         powerAxis.setAutoRangeIncludesZero(false);
         plot.setRangeAxis(1, powerAxis);
         plot.setDataset(1, power);
