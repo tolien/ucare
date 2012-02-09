@@ -86,12 +86,7 @@ public class Grapher implements GraphTool {
 		// Ensure dates are in order
 		TreeSet<Date> keys = new TreeSet<Date>(labData.keySet());
 		for (Date key : keys) {
-			if (key.after(end)) {
-				break;
-			}
-			if (key.after(start)) {
 				s1.add(new Minute(key), labData.get(key)*multiplier);
-			}
 		}
 		
 		dataset.addSeries(s1);
