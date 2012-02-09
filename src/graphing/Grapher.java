@@ -12,6 +12,7 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
 import org.jfree.data.time.*;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.ui.RectangleInsets;
@@ -66,7 +67,12 @@ public class Grapher implements GraphTool {
         plot.setRangeAxis(1, powerAxis);
         plot.setDataset(1, power);
         plot.mapDatasetToRangeAxis(1, 1);
-
+        
+        final StandardXYItemRenderer renderer2 = new StandardXYItemRenderer();
+        renderer2.setSeriesPaint(0, Color.black);
+        renderer2.setBaseShapesVisible(false);
+        plot.setRenderer(1, renderer2);
+        
 		DateAxis axis = (DateAxis) plot.getDomainAxis();
 		axis.setDateFormatOverride(new SimpleDateFormat("HH:mm dd/MM/yy"));
 		axis.setVerticalTickLabels(true);
@@ -74,9 +80,9 @@ public class Grapher implements GraphTool {
 	}
 
 	private void createDataset(String labName, Date start, Date end,
-			Map<Date, Double> labData, TimeSeriesCollection dataset) {
+			Map<Date, Double> labData, TimeSeriesCollection dataset, String namePostfix, double multiplier) {
 		
-		TimeSeries s1 = new TimeSeries(labName);
+		TimeSeries s1 = new TimeSeries(labName+namePostfix);
 		// Ensure dates are in order
 		TreeSet<Date> keys = new TreeSet<Date>(labData.keySet());
 		for (Date key : keys) {
@@ -84,10 +90,10 @@ public class Grapher implements GraphTool {
 				break;
 			}
 			if (key.after(start)) {
-				s1.add(new Minute(key), labData.get(key));
+				s1.add(new Minute(key), labData.get(key)*multiplier);
 			}
 		}
-
+		
 		dataset.addSeries(s1);
 
 	}
@@ -110,12 +116,17 @@ public class Grapher implements GraphTool {
 		power = new TimeSeriesCollection();
 		occupancy = new TimeSeriesCollection();
 		for (String string : labs) {
+<<<<<<< local
 			Map<Date, Double> labData = dataStore.getAbsoluteOccupancy(string, start, end);
 			createDataset(string, start, end, labData, occupancy);
+=======
+			Map<Date, Double> labData = dataStore.getAbsoluteOccupancy(string);
+			createDataset(string, start, end, labData, occupancy, "", 1);
+>>>>>>> other
 			
 			Map<Date, Double> labPower = dataStore.getPower(string);
 			if (labPower != null)
-				createDataset(string, start, end, labPower, power);
+				createDataset(string, start, end, labPower, power, " Power", 0.001);
 			
 		}
 	}
