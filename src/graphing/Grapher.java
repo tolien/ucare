@@ -62,7 +62,7 @@ public class Grapher implements GraphTool {
 		plot.setDomainCrosshairVisible(true);
 		plot.setRangeCrosshairVisible(true);
 		
-        final NumberAxis powerAxis = new NumberAxis("Power usage (KWH)");
+        final NumberAxis powerAxis = new NumberAxis("Power usage (KW)");
         powerAxis.setAutoRangeIncludesZero(false);
         plot.setRangeAxis(1, powerAxis);
         plot.setDataset(1, power);
@@ -80,7 +80,7 @@ public class Grapher implements GraphTool {
 	}
 
 	private void createDataset(String labName, Date start, Date end,
-			Map<Date, Double> labData, TimeSeriesCollection dataset, String namePostfix) {
+			Map<Date, Double> labData, TimeSeriesCollection dataset, String namePostfix, double multiplier) {
 		
 		TimeSeries s1 = new TimeSeries(labName+namePostfix);
 		// Ensure dates are in order
@@ -90,7 +90,7 @@ public class Grapher implements GraphTool {
 				break;
 			}
 			if (key.after(start)) {
-				s1.add(new Minute(key), labData.get(key));
+				s1.add(new Minute(key), labData.get(key)*multiplier);
 			}
 		}
 		
@@ -117,11 +117,11 @@ public class Grapher implements GraphTool {
 		occupancy = new TimeSeriesCollection();
 		for (String string : labs) {
 			Map<Date, Double> labData = dataStore.getAbsoluteOccupancy(string);
-			createDataset(string, start, end, labData, occupancy, "");
+			createDataset(string, start, end, labData, occupancy, "", 1);
 			
 			Map<Date, Double> labPower = dataStore.getPower(string);
 			if (labPower != null)
-				createDataset(string, start, end, labPower, power, " Power");
+				createDataset(string, start, end, labPower, power, " Power", 0.001);
 			
 		}
 	}
