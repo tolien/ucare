@@ -116,13 +116,8 @@ public class Grapher implements GraphTool {
 		power = new TimeSeriesCollection();
 		occupancy = new TimeSeriesCollection();
 		for (String string : labs) {
-<<<<<<< local
 			Map<Date, Double> labData = dataStore.getAbsoluteOccupancy(string, start, end);
-			createDataset(string, start, end, labData, occupancy);
-=======
-			Map<Date, Double> labData = dataStore.getAbsoluteOccupancy(string);
 			createDataset(string, start, end, labData, occupancy, "", 1);
->>>>>>> other
 			
 			Map<Date, Double> labPower = dataStore.getPower(string);
 			if (labPower != null)
