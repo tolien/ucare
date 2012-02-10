@@ -14,7 +14,8 @@ public class DSPowerParser implements Power
 	public static int FIRST_CURRENT = 2;
 	public static int CURRENT_SETS = 3;
 
-	private static double[] POWER_FACTOR = { 0.9, 0.8, 0.7 };
+	//private static double[] POWER_FACTOR = { 0.9, 0.8, 0.7 };
+	private static double[] POWER_FACTOR = { 0.85, 0.875, 0.65 };
 
 	private File file;
 
