@@ -14,7 +14,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import occupancy.Utility;
 
@@ -22,6 +21,7 @@ public class Parser implements DataSource
 {
 	private ExecutorService execService;
 	private CompletionService<Occupancy> ecs;
+	CompletionService<Map<Date, Double>> cs;
 	private CompletionService<Power> powerEcs;
 	private List<String> labs;
 	
@@ -34,6 +34,7 @@ public class Parser implements DataSource
 		execService = Executors.newFixedThreadPool(Runtime
 				.getRuntime().availableProcessors());
 		ecs = new ExecutorCompletionService<Occupancy>(execService);
+		cs = new ExecutorCompletionService<Map<Date, Double>>(execService);
 		powerEcs = new ExecutorCompletionService<Power>(execService);
 		
 		occupancyFiles = new ArrayList<Occupancy>();
@@ -108,8 +109,6 @@ public class Parser implements DataSource
 	@Override
 	public Map<Date, Double> getAbsoluteOccupancy(String lab)
 	{
-		CompletionService<Map<Date, Double>> cs = new ExecutorCompletionService<Map<Date, Double>>(execService);
-		
 		Map<Date, Double> result = new HashMap<Date, Double>();
 		
 		Iterator<Occupancy> it = occupancyFiles.iterator();
@@ -174,7 +173,26 @@ public class Parser implements DataSource
 	}
 
 	@Override
-	public Map<Date, Double> getPower(String string)
+	public Map<Date, List<Double>> getPower(String string)
+	{	
+		Map<Date, List<Double>> result = new HashMap<Date, List<Double>>();
+		
+		Iterator<Power> powerIt = powerFiles.iterator();
+		while (powerIt.hasNext())
+		{
+			Power p = powerIt.next();
+			Map<Date, List<Double>> power = p.getPower();
+			if (power != null && power.size() > 0)
+			{
+				result.putAll(power);
+			}
+		}
+		
+		return result;
+	}
+	
+	@Override
+	public Map<Date, Double> getTotalPower(String string)
 	{	
 		Map<Date, Double> result = new HashMap<Date, Double>();
 		
@@ -182,7 +200,7 @@ public class Parser implements DataSource
 		while (powerIt.hasNext())
 		{
 			Power p = powerIt.next();
-			Map<Date, Double> power = p.getPower();
+			Map<Date, Double> power = p.getTotalPower();
 			if (power != null && power.size() > 0)
 			{
 				result.putAll(power);
@@ -195,9 +213,7 @@ public class Parser implements DataSource
 	@Override
 	public Map<Date, Double> getAbsoluteOccupancy(String labName, Date start,
 			Date end)
-	{
-		CompletionService<Map<Date, Double>> cs = new ExecutorCompletionService<Map<Date, Double>>(execService);
-		
+	{		
 		Map<Date, Double> result = new HashMap<Date, Double>();
 		
 		Iterator<Occupancy> it = occupancyFiles.iterator();
@@ -223,6 +239,44 @@ public class Parser implements DataSource
 			{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
+
+	@Override
+	public Map<Date, List<Double>> getTemperature(String labName)
+	{	
+		Map<Date, List<Double>> result = new HashMap<Date, List<Double>>();
+		
+		Iterator<Power> powerIt = powerFiles.iterator();
+		while (powerIt.hasNext())
+		{
+			Power p = powerIt.next();
+			Map<Date, List<Double>> temp = p.getTemperature();
+			if (temp != null && temp.size() > 0)
+			{
+				result.putAll(temp);
+			}
+		}
+		
+		return result;
+	}
+
+	@Override
+	public Map<Date, Double> getCO2(String labName)
+	{	
+		Map<Date, Double> result = new HashMap<Date, Double>();
+		
+		Iterator<Power> powerIt = powerFiles.iterator();
+		while (powerIt.hasNext())
+		{
+			Power p = powerIt.next();
+			Map<Date, Double> co2 = p.getCO2();
+			if (co2 != null && co2.size() > 0)
+			{
+				result.putAll(co2);
 			}
 		}
 		

@@ -14,8 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import occupancy.Utility;
-
 import au.com.bytecode.opencsv.CSVReader;
 
 public class DSParser implements Occupancy
