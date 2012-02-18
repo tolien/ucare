@@ -34,4 +34,32 @@ public class Utility
 		java.util.Collections.sort(list);
 		return list;
 	}
+	
+	public static Double average(List<Double> list)
+	{
+		if (list.size() > 0)
+		{
+			return sum(list) / list.size();
+		}
+		else
+		{
+			return null;
+		}
+	}
+	
+	public static Double sum(List<Double> list)
+	{
+		double sum = 0.0;
+
+		if (list != null)
+		{
+			Iterator<Double> it = list.iterator();
+			while (it.hasNext())
+			{
+				sum += it.next();
+			}
+		}
+
+		return sum;
+	}
 }
