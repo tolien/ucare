@@ -86,6 +86,7 @@ public class DSPowerParser implements Power
 					
 					double voltage = 230.0;
 					double co2;
+					List<Double> tempValues = new ArrayList<Double>();
 
 					if (line[TIME].contains(":"))
 					{
@@ -93,15 +94,36 @@ public class DSPowerParser implements Power
 
 						voltage = Double.parseDouble(line[FIRST_CURRENT + offset
 								+ CURRENT_SETS * 3 + 2]);
+						
 						 co2 = Double.parseDouble(line[CO2 + offset]);
+						 
+						 for (int i = 1; i <= 4; i++)
+						 {
+							 try {
+							 double temp = Double.parseDouble(line[CO2 + offset - i]);
+							if (i != 2)
+								tempValues.add(temp);
+							 }
+							 catch (NumberFormatException e)
+							 {
+								 
+							 }
+						 }
 					}
 					else
 					{
 						offset = -1;
 						time = dateFormatter.parse(line[DATE]+":00");
 						 co2 = Double.parseDouble(line[CO2 + offset - 1]);
+						 
+						 for (int i = 3; i <= 4; i++)
+						 {
+							 tempValues.add(Double.parseDouble(line[CO2 + offset - i]));
+						 }
 						
 					}
+
+					co2Data.put(time, co2);
 
 					List<Double> powerValues = new ArrayList<Double>();
 					for (int pos = FIRST_CURRENT + offset; pos < FIRST_CURRENT
@@ -117,8 +139,7 @@ public class DSPowerParser implements Power
 						powerValues.add(power); 
 					}
 					powerData.put(time, powerValues);
-					
-					co2Data.put(time, co2);
+					tempData.put(time, tempValues);
 				}
 			}
 		} catch (NumberFormatException e)
@@ -147,7 +168,7 @@ public class DSPowerParser implements Power
 	@Override
 	public Map<Date, List<Double>> getTemperature()
 	{
-		return powerData;
+		return tempData;
 	}
 
 	@Override

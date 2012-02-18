@@ -263,6 +263,30 @@ public class Parser implements DataSource
 		
 		return result;
 	}
+	
+	@Override
+	public Map<Date, Double> getAverageTemperature(String labName)
+	{
+		Map<Date, Double> result = new HashMap<Date, Double>();
+		
+		Iterator<Power> powerIt = powerFiles.iterator();
+		while (powerIt.hasNext())
+		{
+			Power p = powerIt.next();
+			Map<Date, List<Double>> temp = p.getTemperature();
+			if (temp != null && temp.size() > 0)
+			{
+				Iterator<Date> it = temp.keySet().iterator();
+				while (it.hasNext())
+				{
+					Date d = it.next();
+					result.put(d, Utility.average(temp.get(d)));
+				}
+			}
+		}
+		
+		return result;
+	}
 
 	@Override
 	public Map<Date, Double> getCO2(String labName)

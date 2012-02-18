@@ -16,6 +16,7 @@ public interface DataSource
 	public Map<Date, Double> getTotalPower(String labName);
 	public Map<Date, List<Double>> getPower(String labName);
 	public Map<Date, List<Double>> getTemperature(String labName);
+	public Map<Date, Double> getAverageTemperature(String labName);
 	public Map<Date, Double> getCO2(String labName);
 		
 }
