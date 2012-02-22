@@ -33,11 +33,11 @@ public class DSParser implements Occupancy
 	
 	private CSVReader reader;
 
-	private Map<String, Map<Date, Double>> data;
+	private Map<String, Map<Date, Double[]>> data;
 	
 	public void setFile(File f) throws FileNotFoundException
 	{
-		data = new HashMap<String, Map<Date, Double>>();
+		data = new HashMap<String, Map<Date, Double[]>>();
 
 		FileReader fr = new FileReader(f);
 		reader = new CSVReader(fr);
@@ -47,19 +47,19 @@ public class DSParser implements Occupancy
 	{
 		for (int loops = 0; loops < sets; loops++)
 		{
-			Map<String, Map<Date, Double>> set = readSet();
+			Map<String, Map<Date, Double[]>> set = readSet();
 			data.putAll(set);
 		}
 	}
 	
 	private void read(String lab)
 	{
-		Map<String, Map<Date, Double>> set = readSet();
+		Map<String, Map<Date, Double[]>> set = readSet();
 
-		Map<Date, Double> existing = data.get(lab);
+		Map<Date, Double[]> existing = data.get(lab);
 		
 		if (existing == null)
-			existing = new HashMap<Date, Double>();
+			existing = new HashMap<Date, Double[]>();
 		
 		if (set != null && set.get(lab) != null)
 			existing.putAll(set.get(lab));
@@ -78,9 +78,9 @@ public class DSParser implements Occupancy
 	}
 	
 	
-	private Map<String, Map<Date, Double>> readSet()
+	private Map<String, Map<Date, Double[]>> readSet()
 	{
-		Map<String, Map<Date, Double>> data = new HashMap<String, Map<Date, Double>>();
+		Map<String, Map<Date, Double[]>> data = new HashMap<String, Map<Date, Double[]>>();
 		String[] nextLine = null;
 		
 		try
@@ -93,9 +93,11 @@ public class DSParser implements Occupancy
 
 				String labName = (String) nextLine[LAB_NAME];
 				Double occupancy = Double.parseDouble((String) nextLine[DSParser.USERS]);
+				Double machines = Double.parseDouble((String) nextLine[DSParser.TOTAL_MACHINES]);
 				
-				Map<Date, Double> labData = (data.get(labName) == null) ? new HashMap<Date, Double>() : data.get(labName);
-				labData.put(time,  occupancy);
+				Map<Date, Double[]> labData = (data.get(labName) == null) ? new HashMap<Date, Double[]>() : data.get(labName);
+				Double[] entry = { occupancy, occupancy / machines };
+				labData.put(time,  entry);
 				data.put(labName, labData);
 					
 			}
@@ -126,12 +128,37 @@ public class DSParser implements Occupancy
 	public Map<Date, Double> getAbsoluteOccupancy(String lab)
 	{
 		read(lab);
-		return data.get(lab);
+		
+		Map<Date, Double> result = new HashMap<Date, Double>();
+		
+		Map<Date, Double[]> labData = data.get(lab);
+		Iterator<Date> it = labData.keySet().iterator();
+		while (it.hasNext())
+		{
+			Date d = it.next();
+			Double[] occupancy = labData.get(d);
+			result.put(d, occupancy[0]);
+		}
+		
+		return result;
 	}
 	
 	public Map<Date, Double> getRelativeOccupancy(String lab)
 	{
-		return null;
+		read(lab);
+		
+		Map<Date, Double> result = new HashMap<Date, Double>();
+		
+		Map<Date, Double[]> labData = data.get(lab);
+		Iterator<Date> it = labData.keySet().iterator();
+		while (it.hasNext())
+		{
+			Date d = it.next();
+			Double[] occupancy = labData.get(d);
+			result.put(d, occupancy[1]);
+		}
+		
+		return result;
 	}
 	
 	public List<String> getLabList()
@@ -152,18 +179,52 @@ public class DSParser implements Occupancy
 			Date end)
 	{
 		read(lab);
-		Map<Date, Double> result = data.get(lab);
 		
-		Set<Date> keys = result.keySet();
-		Iterator<Date> keyIt = keys.iterator();
-		while (keyIt.hasNext())
+		Map<Date, Double> result = new HashMap<Date, Double>();
+		
+		Map<Date, Double[]> labData = data.get(lab);
+		Iterator<Date> it = labData.keySet().iterator();
+		while (it.hasNext())
 		{
-			Date d = keyIt.next();
+			Date d = it.next();
 			if (d.compareTo(start) < 0 || d.compareTo(end) > 0)
 			{
 				return null;
 			}
+			else
+			{
+				Double[] occupancy = labData.get(d);
+				result.put(d, occupancy[0]);
+			}
 		}
+		
+		return result;
+	}
+	
+	@Override
+	public Map<Date, Double> getRelativeOccupancy(String lab, Date start,
+			Date end)
+	{
+		read(lab);
+		
+		Map<Date, Double> result = new HashMap<Date, Double>();
+		
+		Map<Date, Double[]> labData = data.get(lab);
+		Iterator<Date> it = labData.keySet().iterator();
+		while (it.hasNext())
+		{
+			Date d = it.next();
+			if (d.compareTo(start) < 0 || d.compareTo(end) > 0)
+			{
+				return null;
+			}
+			else
+			{
+				Double[] occupancy = labData.get(d);
+				result.put(d, occupancy[1]);
+			}
+		}
+		
 		return result;
 	}
 	

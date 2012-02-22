@@ -10,6 +10,7 @@ public interface DataSource
 	public Map<Date, Double> getRelativeOccupancy(String labName);
 	
 	public Map<Date, Double> getAbsoluteOccupancy(String labName, Date start, Date end);
+	public Map<Date, Double> getRelativeOccupancy(String labName, Date start, Date end);
 	
 	public List<String> getLabList();
 

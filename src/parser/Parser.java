@@ -148,7 +148,29 @@ public class Parser implements DataSource
 		Iterator<Occupancy> it = occupancyFiles.iterator();
 		while (it.hasNext())
 		{
-			result.putAll(it.next().getRelativeOccupancy(lab));
+			OccupancyFetcher fetch = new OccupancyFetcher(it.next(), lab);
+			fetch.setRelative(true);
+			cs.submit(fetch);
+		}
+		
+		for (int i = 0; i < occupancyFiles.size(); i++)
+		{
+			Map<Date, Double> occupancy;
+			try
+			{
+				occupancy = cs.take().get();
+				if (occupancy != null && occupancy.size() > 0)
+					result.putAll(occupancy);
+				
+			} catch (InterruptedException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ExecutionException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		return result;
@@ -220,6 +242,43 @@ public class Parser implements DataSource
 		while (it.hasNext())
 		{
 			cs.submit(new OccupancyFetcher(it.next(), labName, start, end));
+		}
+		
+		for (int i = 0; i < occupancyFiles.size(); i++)
+		{
+			Map<Date, Double> occupancy;
+			try
+			{
+				occupancy = cs.take().get();
+				if (occupancy != null && occupancy.size() > 0)
+					result.putAll(occupancy);
+				
+			} catch (InterruptedException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ExecutionException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
+	
+	@Override
+	public Map<Date, Double> getRelativeOccupancy(String labName, Date start,
+			Date end)
+	{		
+		Map<Date, Double> result = new HashMap<Date, Double>();
+		
+		Iterator<Occupancy> it = occupancyFiles.iterator();
+		while (it.hasNext())
+		{
+			OccupancyFetcher fetch = new OccupancyFetcher(it.next(), labName, start, end);
+			fetch.setRelative(true);
+			cs.submit(fetch);
 		}
 		
 		for (int i = 0; i < occupancyFiles.size(); i++)
