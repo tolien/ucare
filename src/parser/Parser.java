@@ -21,7 +21,6 @@ public class Parser implements DataSource
 {
 	private ExecutorService execService;
 	private CompletionService<Occupancy> ecs;
-	CompletionService<Map<Date, Double>> cs;
 	private CompletionService<Power> powerEcs;
 	private List<String> labs;
 	
@@ -30,20 +29,26 @@ public class Parser implements DataSource
 	
 	public Parser()
 	{
-
-		execService = Executors.newFixedThreadPool(Runtime
-				.getRuntime().availableProcessors());
-		ecs = new ExecutorCompletionService<Occupancy>(execService);
-		cs = new ExecutorCompletionService<Map<Date, Double>>(execService);
-		powerEcs = new ExecutorCompletionService<Power>(execService);
+		powerEcs = new ExecutorCompletionService<Power>(getExecutor());
 		
 		occupancyFiles = new ArrayList<Occupancy>();
 		powerFiles = new ArrayList<Power>();
 		labs = new ArrayList<String>();
 	}
 	
+	private ExecutorService getExecutor()
+	{
+		if (execService == null || execService.isShutdown())
+		{
+			execService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+		}
+		
+		return execService;
+	}
+	
 	public void read(String directory, ParserFactory factory)
 	{
+		ecs = new ExecutorCompletionService<Occupancy>(getExecutor());
 		try
 		{
 			File dir = new File(directory);
@@ -109,6 +114,7 @@ public class Parser implements DataSource
 	@Override
 	public Map<Date, Double> getAbsoluteOccupancy(String lab)
 	{
+		CompletionService<Map<Date, Double>> cs = new ExecutorCompletionService<Map<Date, Double>>(getExecutor());
 		Map<Date, Double> result = new HashMap<Date, Double>();
 		
 		Iterator<Occupancy> it = occupancyFiles.iterator();
@@ -143,6 +149,7 @@ public class Parser implements DataSource
 	@Override
 	public Map<Date, Double> getRelativeOccupancy(String lab)
 	{
+		CompletionService<Map<Date, Double>> cs = new ExecutorCompletionService<Map<Date, Double>>(getExecutor());
 		Map<Date, Double> result = new HashMap<Date, Double>();
 		
 		Iterator<Occupancy> it = occupancyFiles.iterator();
@@ -172,6 +179,8 @@ public class Parser implements DataSource
 				e.printStackTrace();
 			}
 		}
+		
+		execService.shutdown();
 		
 		return result;
 	}
@@ -235,7 +244,8 @@ public class Parser implements DataSource
 	@Override
 	public Map<Date, Double> getAbsoluteOccupancy(String labName, Date start,
 			Date end)
-	{		
+	{
+		CompletionService<Map<Date, Double>> cs = new ExecutorCompletionService<Map<Date, Double>>(getExecutor());
 		Map<Date, Double> result = new HashMap<Date, Double>();
 		
 		Iterator<Occupancy> it = occupancyFiles.iterator();
@@ -264,13 +274,16 @@ public class Parser implements DataSource
 			}
 		}
 		
+		execService.shutdown();
+		
 		return result;
 	}
 	
 	@Override
 	public Map<Date, Double> getRelativeOccupancy(String labName, Date start,
 			Date end)
-	{		
+	{	
+		CompletionService<Map<Date, Double>> cs = new ExecutorCompletionService<Map<Date, Double>>(getExecutor());
 		Map<Date, Double> result = new HashMap<Date, Double>();
 		
 		Iterator<Occupancy> it = occupancyFiles.iterator();
@@ -300,6 +313,8 @@ public class Parser implements DataSource
 				e.printStackTrace();
 			}
 		}
+		
+		execService.shutdown();
 		
 		return result;
 	}
