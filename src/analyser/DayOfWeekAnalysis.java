@@ -13,15 +13,16 @@ public class DayOfWeekAnalysis extends Analyser
 {
 	private static DateFormatSymbols dfs = new DateFormatSymbols();
 	private static int INTERVAL = Calendar.DAY_OF_WEEK;
+	private static String NAME = "Day of Week";
 	
 	@Override
 	protected boolean selectData(Date d)
 	{
-		return (d.getHours() > 9 && d.getHours() < 17);
+		return true;
 	}
 
 	@Override
-	protected int getInterval()
+	public int getInterval()
 	{
 		return INTERVAL;
 	}
@@ -35,10 +36,15 @@ public class DayOfWeekAnalysis extends Analyser
 		while (it.hasNext())
 		{
 			int day = it.next();
-			System.out.println(days[day] + ": " + data.get(day));
+			//System.out.println(days[day] + ": " + data.get(day));
 		}
 		
 		return data;
+	}
+	
+	public String getName()
+	{
+		return NAME;
 	}
 
 }

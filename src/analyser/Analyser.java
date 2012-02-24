@@ -4,7 +4,7 @@ import java.util.*;
 
 import occupancy.Utility;
 
-public abstract class Analyser implements OccupancyAnalyser
+public abstract class Analyser implements DataAnalyser
 {
 	protected Map<Integer, Double> data = new HashMap<Integer, Double>();
 	protected Date minDate;
@@ -19,7 +19,7 @@ public abstract class Analyser implements OccupancyAnalyser
 		while (it.hasNext())
 		{
 			int day = it.next();
-			System.out.println(day + ": " + data.get(day));
+			//System.out.println(day + ": " + data.get(day));
 		}
 		
 		return data;
@@ -132,13 +132,18 @@ public abstract class Analyser implements OccupancyAnalyser
 			return null;
 		}
 	}
+	
+	protected Double median(List<Double> list)
+	{
+		return quartile(list, 2);
+	}
 
 	protected Double summarisationStep(List<Double> data)
 	{
-		return max(data);
+		return quartile(data, 3);
 	}
 
 	protected abstract boolean selectData(Date d);
-	protected abstract int getInterval();
+	public abstract int getInterval();
 
 }

@@ -13,6 +13,7 @@ public class MonthOfYearAnalysis extends Analyser
 {
 	private static DateFormatSymbols dfs = new DateFormatSymbols();
 	private static int INTERVAL = Calendar.MONTH;
+	private static String NAME = "Month of Year";
 
 	@Override
 	protected boolean selectData(Date d)
@@ -21,7 +22,7 @@ public class MonthOfYearAnalysis extends Analyser
 	}
 
 	@Override
-	protected int getInterval()
+	public int getInterval()
 	{
 		return INTERVAL;
 	}
@@ -35,10 +36,15 @@ public class MonthOfYearAnalysis extends Analyser
 		while (it.hasNext())
 		{
 			int month = it.next();
-			System.out.println(months[month] + ": " + data.get(month));
+			//System.out.println(months[month] + ": " + data.get(month));
 		}
 		
 		return data;
+	}
+	
+	public String getName()
+	{
+		return NAME;
 	}
 
 
