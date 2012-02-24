@@ -2,6 +2,8 @@ package prediction;
 
 import java.util.*;
 
+import occupancy.Utility;
+
 import analyser.*;
 
 import analyser.DataAnalyser;
@@ -29,6 +31,8 @@ public class OccupancyBasedPrediction implements Predictor
 	{
 		double probability = 1;
 		Iterator<Integer> it = analysedData.keySet().iterator();
+		
+		List<Double> estimates = new ArrayList<Double>();
 		while (it.hasNext())
 		{
 			int type = it.next();
@@ -38,12 +42,12 @@ public class OccupancyBasedPrediction implements Predictor
 			if (data.get(period) != null)
 			{
 				double factor = data.get(period);
-				probability *= factor;
+				estimates.add(factor);
 			}
 			
 		}
 		
-		return probability;
+		return Utility.average(estimates);
 	}
 	
 	public int getDatePart(Date d, int part)
