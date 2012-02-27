@@ -18,7 +18,7 @@ public class DayOfWeekAnalysis extends Analyser
 	@Override
 	protected boolean selectData(Date d)
 	{
-		return true;
+		return (d.getHours() >= 9 && d.getHours() <= 17);
 	}
 
 	@Override
