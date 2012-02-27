@@ -18,7 +18,13 @@ public class MonthOfYearAnalysis extends Analyser
 	@Override
 	protected boolean selectData(Date d)
 	{
-		return true;
+		Calendar c = Calendar.getInstance();
+		c.setTime(d);
+		
+		int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+		int hourOfDay = c.get(Calendar.HOUR_OF_DAY);
+		
+		return dayOfWeek > 0 && dayOfWeek < 6 && hourOfDay > 8 && hourOfDay < 17;
 	}
 
 	@Override
