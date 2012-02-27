@@ -87,7 +87,7 @@ public abstract class Analyser implements DataAnalyser
 			}
 		}
 		
-		return (max != Integer.MIN_VALUE) ? max : null;
+		return (max != Integer.MIN_VALUE) ? max : 0.0;
 	}
 	
 	protected Double min(List<Double> list)
