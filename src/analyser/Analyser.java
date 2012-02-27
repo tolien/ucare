@@ -7,6 +7,7 @@ import occupancy.Utility;
 public abstract class Analyser implements DataAnalyser
 {
 	protected Map<Integer, Double> data = new HashMap<Integer, Double>();
+	protected Map<Integer, Double[]> boxplot = new HashMap<Integer, Double[]>();
 	protected Date minDate;
 	protected Date maxDate;
 	protected Date minTime;
@@ -14,14 +15,6 @@ public abstract class Analyser implements DataAnalyser
 	
 	public Map<Integer, Double> getResult()
 	{
-		List<Integer> keys = Utility.asSortedList(data.keySet());
-		Iterator<Integer> it = keys.iterator();
-		while (it.hasNext())
-		{
-			int day = it.next();
-			//System.out.println(day + ": " + data.get(day));
-		}
-		
 		return data;
 	}
 	
@@ -45,7 +38,8 @@ public abstract class Analyser implements DataAnalyser
 				{
 					dataForInterval = new ArrayList<Double>();
 				}
-				dataForInterval.add(points.get(d));
+				if (points.get(d) != 0.0)
+					dataForInterval.add(points.get(d));
 				totals.put(intervalID, dataForInterval);
 			}
 		}
@@ -56,6 +50,8 @@ public abstract class Analyser implements DataAnalyser
 			int interval = intervalIterator.next();
 			List<Double> intervalData = totals.get(interval);
 			data.put(interval, summarisationStep(intervalData));
+			
+			boxplot.put(interval, fillBoxplot(intervalData));
 		}
 		
 		this.getResult();
@@ -108,7 +104,7 @@ public abstract class Analyser implements DataAnalyser
 			}
 		}
 		
-		return (min != Integer.MAX_VALUE) ? min : null;
+		return (min != Integer.MAX_VALUE) ? min : 0.0;
 	}
 	
 	protected Double quartile(List<Double> list, Integer quartile)
@@ -118,7 +114,10 @@ public abstract class Analyser implements DataAnalyser
 		Integer n = quartile * list.size() / 4;
 		// System.out.println(list.size() + ", " + n);
 		
-		return list.get(n) + 0.0;
+		if (list.size() == 0)
+			return 0.0;
+		else
+			return list.get(n) + 0.0;
 	}
 	
 	protected Double average(List<Double> list)
@@ -141,6 +140,24 @@ public abstract class Analyser implements DataAnalyser
 	protected Double summarisationStep(List<Double> data)
 	{
 		return quartile(data, 3);
+	}
+	
+	private Double[] fillBoxplot(List<Double> list)
+	{
+		Double[] result = new Double[5];
+		
+		result[0] = min(list);
+		result[1] = quartile(list, 1);
+		result[2] = median(list);
+		result[3] = quartile(list, 3);
+		result[4] = max(list);
+		
+		return result;
+	}
+	
+	public Map<Integer, Double[]> getBoxplot()
+	{
+		return boxplot;
 	}
 
 	protected abstract boolean selectData(Date d);
