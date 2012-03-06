@@ -13,11 +13,10 @@ public class DSPowerParser implements Power
 	public static int TIME = 1;
 	public static int FIRST_CURRENT = 2;
 	public static int CURRENT_SETS = 3;
-	
-	public static int CO2 = 15;
-	
 
-	//private static double[] POWER_FACTOR = { 0.9, 0.8, 0.7 };
+	public static int CO2 = 15;
+
+	// private static double[] POWER_FACTOR = { 0.9, 0.8, 0.7 };
 	private static double[] POWER_FACTOR = { 0.85, 0.875, 0.65 };
 
 	private File file;
@@ -43,28 +42,28 @@ public class DSPowerParser implements Power
 	{
 		return powerData;
 	}
-	
+
 	@Override
 	public Map<Date, Double> getTotalPower()
 	{
 		Map<Date, Double> totals = new HashMap<Date, Double>();
-		
+
 		Iterator<Date> it = powerData.keySet().iterator();
 		while (it.hasNext())
 		{
 			Date d = it.next();
 			List<Double> power = powerData.get(d);
-			
+
 			double totalPower = 0.0;
 			Iterator<Double> pIt = power.iterator();
 			while (pIt.hasNext())
 			{
 				totalPower += pIt.next();
 			}
-			
+
 			totals.put(d, totalPower);
 		}
-		
+
 		return totals;
 	}
 
@@ -79,73 +78,79 @@ public class DSPowerParser implements Power
 		{
 			while ((line = reader.readNext()) != null)
 			{
-				if (line.length > 1 && line[DATE].length() > 0)
+				try
 				{
-					Date time = null;
-					int offset = 0;
-					
-					double voltage = 230.0;
-					double co2;
-					List<Double> tempValues = new ArrayList<Double>();
-
-					if (line[TIME].contains(":"))
+					if (line.length > 1 && line[DATE].length() > 0)
 					{
-						time = dateFormatter.parse(line[DATE] + " " + line[TIME]);
+						Date time = null;
+						int offset = 0;
 
-						voltage = Double.parseDouble(line[FIRST_CURRENT + offset
-								+ CURRENT_SETS * 3 + 2]);
-						
-						 co2 = Double.parseDouble(line[CO2 + offset]);
-						 
-						 for (int i = 1; i <= 4; i++)
-						 {
-							 try {
-							 double temp = Double.parseDouble(line[CO2 + offset - i]);
-							if (i != 2)
-								tempValues.add(temp);
-							 }
-							 catch (NumberFormatException e)
-							 {
-								 
-							 }
-						 }
-					}
-					else
-					{
-						offset = -1;
-						time = dateFormatter.parse(line[DATE]+":00");
-						 co2 = Double.parseDouble(line[CO2 + offset - 1]);
-						 
-						 for (int i = 3; i <= 4; i++)
-						 {
-							 tempValues.add(Double.parseDouble(line[CO2 + offset - i]));
-						 }
-						
-					}
+						double voltage = 230.0;
+						double co2;
+						List<Double> tempValues = new ArrayList<Double>();
 
-					co2Data.put(time, co2);
+						if (line[TIME].contains(":"))
+						{
+							time = dateFormatter.parse(line[DATE] + " "
+									+ line[TIME]);
 
-					List<Double> powerValues = new ArrayList<Double>();
-					for (int pos = FIRST_CURRENT + offset; pos < FIRST_CURRENT
-							+ offset + CURRENT_SETS * 3; pos += 3)
-					{
-						double power = 0.0;
-						for (int phase = 0; phase < 3; phase++)
-						{	
+							voltage = Double.parseDouble(line[FIRST_CURRENT
+									+ offset + CURRENT_SETS * 3 + 2]);
 
-							double current = Double.parseDouble(line[pos + phase]);
-							power += current * voltage * POWER_FACTOR[phase];
+							co2 = Double.parseDouble(line[CO2 + offset]);
+
+							for (int i = 1; i <= 4; i++)
+							{
+								try
+								{
+									double temp = Double.parseDouble(line[CO2
+											+ offset - i]);
+									if (i != 2)
+										tempValues.add(temp);
+								} catch (NumberFormatException e)
+								{
+
+								}
+							}
+						} else
+						{
+							offset = -1;
+							time = dateFormatter.parse(line[DATE] + ":00");
+							co2 = Double.parseDouble(line[CO2 + offset - 1]);
+
+							for (int i = 3; i <= 4; i++)
+							{
+								tempValues.add(Double.parseDouble(line[CO2
+										+ offset - i]));
+							}
+
 						}
-						powerValues.add(power); 
+
+						co2Data.put(time, co2);
+
+						List<Double> powerValues = new ArrayList<Double>();
+						for (int pos = FIRST_CURRENT + offset; pos < FIRST_CURRENT
+								+ offset + CURRENT_SETS * 3; pos += 3)
+						{
+							double power = 0.0;
+							for (int phase = 0; phase < 3; phase++)
+							{
+
+								double current = Double.parseDouble(line[pos
+										+ phase]);
+								power += current * voltage
+										* POWER_FACTOR[phase];
+							}
+							powerValues.add(power);
+						}
+						powerData.put(time, powerValues);
+						tempData.put(time, tempValues);
 					}
-					powerData.put(time, powerValues);
-					tempData.put(time, tempValues);
+				} catch (NumberFormatException e)
+				{
+					//System.out.println("NumberFormatException occurred");
 				}
 			}
-		} catch (NumberFormatException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (IOException e)
 		{
 			// TODO Auto-generated catch block
