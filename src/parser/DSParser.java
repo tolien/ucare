@@ -68,7 +68,7 @@ public class DSParser implements Occupancy
 		while (set.size() > 0)
 		{
 			set = readSet();
-			if (set != null && set.size() > 0)
+			if (set != null && set.size() > 0 && (set.get(lab) != null && set.get(lab).size() > 0))
 			{
 				existing = data.get(lab);
 				existing.putAll(set.get(lab));
