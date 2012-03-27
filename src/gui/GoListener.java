@@ -9,18 +9,30 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 
 import parser.DataSource;
 
-public class GoListener implements ActionListener {
+public class GoListener implements ActionListener, Observer {
 
 	private static final int GRAPH_HEIGHT = 600;
 
 	private DataSource source;
 
 	private InputAnalyser input;
+	
+	private JPanel panel = new JPanel();
+	private JProgressBar progress = new JProgressBar();
+	private JFrame frame = new JFrame("Running");
 
 	public GoListener(InputAnalyser input) {
+		frame.add(panel);
+		
 		this.input = input;
 		source=input.getDataSource();
 	}
@@ -46,10 +58,25 @@ public class GoListener implements ActionListener {
 						input.getIntervalTime(), input.getIntervalName(), input.getADataType());
 			}
 			
-			
-			
-			new GraphGUI(graphTool.getGraph(1200,GRAPH_HEIGHT - 1));
+			setUpProgress();
+			int days = (int) ((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+			new GraphGUI(graphTool.getGraph(1024,GRAPH_HEIGHT - 1));
 		}
+	}
+
+	@Override
+	public void update(Observable arg0, Object arg1)
+	{
+		Double progress = ((Double) arg1) * 100;
+		this.progress.setValue(progress.intValue());
+	}
+	
+	private void setUpProgress()
+	{
+		((Observable) source).addObserver(this);
+		panel.add(progress);
+		frame.setSize(300, 200);
+		frame.setVisible(true);
 	}
 
 }

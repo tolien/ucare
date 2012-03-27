@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Observable;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
@@ -17,7 +18,7 @@ import java.util.concurrent.Executors;
 
 import occupancy.Utility;
 
-public class Parser implements DataSource
+public class Parser extends Observable implements DataSource
 {
 	private ExecutorService execService;
 	private CompletionService<Occupancy> ecs;
@@ -140,6 +141,10 @@ public class Parser implements DataSource
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			
+			setChanged();
+			double progress = i / (double) occupancyFiles.size();
+			notifyObservers(progress);
 		}
 		
 		return result;
