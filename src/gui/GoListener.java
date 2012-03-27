@@ -11,6 +11,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -26,24 +28,57 @@ public class GoListener implements ActionListener, Observer {
 
 	private InputAnalyser input;
 	
-	private JPanel panel = new JPanel();
-	private JProgressBar progress = new JProgressBar();
-	private JFrame frame = new JFrame("Running");
+	private JPanel panel;
+	private JProgressBar progress;
+	private JFrame frame;
+	private static Lock lock = new ReentrantLock();
 
-	public GoListener(InputAnalyser input) {
-		frame.add(panel);
-		
+	public GoListener(InputAnalyser input) {		
 		this.input = input;
 		source=input.getDataSource();
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		String lab = input.getLab();
 		Date startDate = input.getStartDate();
 		Date endDate = input.getEndDate();
 		if (startDate.compareTo(endDate) >= 0) {
 			input.datesWrongOrder();
 		} else {
+			setUpProgress();
+			new ParserRunner().start();
+		}
+	}
+
+	@Override
+	public void update(Observable arg0, Object arg1)
+	{
+		Double progress = ((Double) arg1) * 100;
+		int percentProgress = progress.intValue();
+		this.progress.setValue(percentProgress);
+	}
+	
+	private void setUpProgress()
+	{
+		panel = new JPanel();
+		frame = new JFrame("Running");
+		frame.add(panel);
+		
+		progress = new JProgressBar();
+		((Observable) source).addObserver(this);
+		panel.add(progress);
+		progress.setValue(0);
+		frame.setSize(300, 100);
+		frame.setVisible(true);
+	}
+	
+	private class ParserRunner extends Thread
+	{
+		public void run()
+		{
+			lock.lock();
+			Date startDate = input.getStartDate();
+			Date endDate = input.getEndDate();
+			String lab = input.getLab();
 			List<String> labs = new ArrayList<String>();
 			labs.add(lab);
 			ImageGenerator graphTool;
@@ -58,25 +93,11 @@ public class GoListener implements ActionListener, Observer {
 						input.getIntervalTime(), input.getIntervalName(), input.getADataType());
 			}
 			
-			setUpProgress();
-			int days = (int) ((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
 			new GraphGUI(graphTool.getGraph(1024,GRAPH_HEIGHT - 1));
+			frame.setVisible(false);
+			frame.dispose();
+			lock.unlock();
 		}
-	}
-
-	@Override
-	public void update(Observable arg0, Object arg1)
-	{
-		Double progress = ((Double) arg1) * 100;
-		this.progress.setValue(progress.intValue());
-	}
-	
-	private void setUpProgress()
-	{
-		((Observable) source).addObserver(this);
-		panel.add(progress);
-		frame.setSize(300, 200);
-		frame.setVisible(true);
 	}
 
 }

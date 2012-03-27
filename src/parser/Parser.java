@@ -141,10 +141,6 @@ public class Parser extends Observable implements DataSource
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
-			setChanged();
-			double progress = i / (double) occupancyFiles.size();
-			notifyObservers(progress);
 		}
 		
 		return result;
@@ -182,6 +178,7 @@ public class Parser extends Observable implements DataSource
 				e.printStackTrace();
 			}
 		}
+		
 		
 		execService.shutdown();
 		
@@ -268,6 +265,10 @@ public class Parser extends Observable implements DataSource
 				occupancy = cs.take().get();
 				if (occupancy != null && occupancy.size() > 0)
 					result.putAll(occupancy);
+			
+				setChanged();
+				double progress = i / (double) occupancyFiles.size();
+				notifyObservers(progress);
 				
 			} catch (InterruptedException e)
 			{
@@ -311,6 +312,10 @@ public class Parser extends Observable implements DataSource
 				occupancy = cs.take().get();
 				if (occupancy != null && occupancy.size() > 0)
 					result.putAll(occupancy);
+		
+				setChanged();
+				double progress = i / (double) occupancyFiles.size();
+				notifyObservers(progress);
 				
 			} catch (InterruptedException e)
 			{

@@ -151,7 +151,6 @@ public class DSPowerParser implements Power
 							double power = 0.0;
 							for (int phase = 0; phase < 3; phase++)
 							{
-
 								double current = Double.parseDouble(line[pos
 										+ phase]);
 								power += current * voltage
