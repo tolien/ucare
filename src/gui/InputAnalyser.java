@@ -21,4 +21,15 @@ public interface InputAnalyser {
 	public int getAxis2Type();
 
 	public int getIntervalTime();
+
+	public String getIntervalName();
+	
+	public boolean getADataType();
+	
+	public void showAnalyser();
+	
+	public void showGrapher();
+	
+	public void showPredicter();
+
 }

@@ -24,7 +24,7 @@ public class Grapher implements GraphTool, ImageGenerator {
 	private TimeSeriesCollection occupancy = null;
 	private TimeSeriesCollection power = null;
 	private DataSource dataStore;
-
+	private String axisLabel;
 	private Grapher() {
 
 	}
@@ -40,7 +40,7 @@ public class Grapher implements GraphTool, ImageGenerator {
 		dataStore = dataSource;
 	}
 
-	private static JFreeChart createChart(XYDataset occupancy, XYDataset power) {
+	private JFreeChart createChart(XYDataset occupancy, XYDataset power) {
 
 		JFreeChart chart = ChartFactory.createTimeSeriesChart(
 				"Lab Usage Data", // title
@@ -62,7 +62,7 @@ public class Grapher implements GraphTool, ImageGenerator {
 		plot.setDomainCrosshairVisible(true);
 		plot.setRangeCrosshairVisible(true);
 		
-        final NumberAxis powerAxis = new NumberAxis("Power (kW)");
+        final NumberAxis powerAxis = new NumberAxis(axisLabel);
         powerAxis.setAutoRangeIncludesZero(false);
         plot.setRangeAxis(1, powerAxis);
         plot.setDataset(1, power);
@@ -136,18 +136,24 @@ public class Grapher implements GraphTool, ImageGenerator {
 			createDataset(labName, start, end, labData, occupancy, "", 1);
 			
 			if(splitPower){
-				Map<Date,List <Double>> labPower=dataStore.getPower(labName, start, end);
+				Map<Date,List <Double>> labPower=dataStore.getPower(labName, start,end);
 				if(labPower !=null)
 				createMultiDataset(labName, start, end, labPower, power, " Power", 0.001);
 			}else{
 				Map<Date, Double> labPower;
+				String annotation; 
 				if(axisType==1){
-					labPower = dataStore.getTotalPower(labName, start, end);
+					labPower = dataStore.getTotalPower(labName, start,end );
+					annotation = " Power";
+					axisLabel = "Power (kW)";
+					
 				}else{
-					 labPower = dataStore.getCO2(labName, start, end);
+					labPower = dataStore.getCO2(labName, start,end);
+					annotation = " CO2";
+					axisLabel = "CO2 (ppm)";
 				}
 				if (labPower != null)
-					createDataset(labName, start, end, labPower, power, " Power", 0.001);
+					createDataset(labName, start, end, labPower, power, annotation, 0.001);
 			}
 		}
 	}

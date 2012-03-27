@@ -48,7 +48,7 @@ public class AnalysisGrapher implements AnalysisGraphTool, ImageGenerator {
 	public JPanel getGraph(int xSize, int ySize) {
 		// TODO make proper exception
 		if (data!=null) {
-			JFreeChart chart = createChart(axisLabel,timeDesc, data);
+			JFreeChart chart = createChart();
 			ChartPanel chartPanel = new ChartPanel(chart, false);
 			chartPanel.setPreferredSize(new java.awt.Dimension(xSize, ySize));
 			return chartPanel;
@@ -57,9 +57,9 @@ public class AnalysisGrapher implements AnalysisGraphTool, ImageGenerator {
 		return null;
 	}
 
-	private static JFreeChart createChart(String axis,String timePeriod, DefaultBoxAndWhiskerXYDataset data) {
+	private JFreeChart createChart() {
 		JFreeChart chart = ChartFactory.createBoxAndWhiskerChart(
-				"Lab Analysis", "Time", axis, data, true);
+				"Lab Analysis", "Time "+timeDesc, axisLabel, data, true);
 		chart.setBackgroundPaint(new Color(249, 231, 236));
 		return chart;
 	}
@@ -72,7 +72,7 @@ public class AnalysisGrapher implements AnalysisGraphTool, ImageGenerator {
 		for (String labName : labs) {
 			
 			if (isPower){
-				 labData= dataStore.getTotalPower(labName, start, end);	
+				 labData= dataStore.getTotalPower(labName, start,end);	
 				 axisLabel = "KW";
 			}else{
 				 labData = dataStore.getAbsoluteOccupancy(labName, start, end);

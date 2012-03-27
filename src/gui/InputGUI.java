@@ -48,12 +48,18 @@ public class InputGUI implements InputAnalyser {
 	private JComboBox endHourComboBox;
 	private JComboBox endMinuteComboBox;
 	
-	private JLabel dataTypeLabel = new JLabel("Select data type:");
+	private JLabel dataTypeLabel = new JLabel("Select output type:");
 	private ButtonGroup graphType = new ButtonGroup();
 	private JRadioButton rawButton = new JRadioButton("Raw");
 	private JRadioButton analysedButton = new JRadioButton("Analysed");
+	private JRadioButton predictButton = new JRadioButton("Prediction");
 	
-	private JLabel seriesLabel = new JLabel("Select field 2:");
+	private JLabel analysisDataLabel = new JLabel("Select data type:");
+	private ButtonGroup analysisData = new ButtonGroup();
+	private JRadioButton aPowerButton = new JRadioButton("Power");
+	private JRadioButton aOccupancyButton = new JRadioButton("Occupancy");
+	
+	private JLabel seriesLabel = new JLabel("Select second axis:");
 	private ButtonGroup seriesType = new ButtonGroup();
 	private JRadioButton cOButton = new JRadioButton("CO2");
 	private JRadioButton splitButton = new JRadioButton("Split Power");
@@ -131,39 +137,56 @@ public class InputGUI implements InputAnalyser {
 		endMinuteComboBox.setBounds(280, 73, 40, 20);
 		
 		mainPanel.add(dataTypeLabel);
-		dataTypeLabel.setBounds(10, 103, 100, 15);
+		dataTypeLabel.setBounds(10, 103, 110, 15);
 		graphType.add(rawButton);
 		graphType.add(analysedButton);
 		analysedButton.setSelected(true);
+
+		rawButton.addActionListener(new ModeListener(this));
+		analysedButton.addActionListener(new ModeListener(this));
+		
 		mainPanel.add(rawButton);
-		rawButton.setBounds(117, 104, 50, 15);
+		rawButton.setBounds(125, 104, 50, 15);
 		mainPanel.add(analysedButton);
-		analysedButton.setBounds(167, 104, 100, 15);
+		analysedButton.setBounds(175, 104, 100, 15);
 
 		mainPanel.add(seriesLabel);
-		seriesLabel.setBounds(10, 119, 100, 15);
+		seriesLabel.setBounds(10, 119, 115, 15);
 		seriesType.add(cOButton);
 		seriesType.add(splitButton);
 		seriesType.add(powerButton);
 		powerButton.setSelected(true);
 		
 		mainPanel.add(cOButton);
-		cOButton.setBounds(117, 119, 50, 15);
+		cOButton.setBounds(125, 119, 50, 15);
 		mainPanel.add(splitButton);
-		splitButton.setBounds(167, 119, 90, 15);
+		splitButton.setBounds(175, 119, 90, 15);
 		mainPanel.add(powerButton);
-		powerButton.setBounds(257, 119, 105, 15);
+		powerButton.setBounds(265, 119, 105, 15);
+		
+		mainPanel.add(analysisDataLabel);
+		analysisDataLabel.setBounds(10, 133, 110, 15);
+		analysisData.add(aOccupancyButton);
+		analysisData.add(aPowerButton);
+		aOccupancyButton.setSelected(true);
+		
+		mainPanel.add(aOccupancyButton);
+		aOccupancyButton.setBounds(125, 133, 100, 15);
+		mainPanel.add(aPowerButton);
+		aPowerButton.setBounds(225, 133, 90, 15);
 		
 		mainPanel.add(selectDurationLabel);
-		selectDurationLabel.setBounds(10, 133, 160, 20);
+		selectDurationLabel.setBounds(10, 148, 160, 20);
 		String[] periods = {"Hours", "Half-Day", "Day", "Week", "Month", "Quarter", "Year"};
 		durationComboBox = new JComboBox(periods);
 		mainPanel.add(durationComboBox);
-		durationComboBox.setBounds(170, 133, 230, 20);
+		durationComboBox.setBounds(170, 148, 230, 20);
+		
 		
 		mainPanel.add(goButton);
-		goButton.setBounds(120, 153, 50, 30);
+		goButton.setBounds(120, 168, 50, 30);
 		goButton.addActionListener(new GoListener(this));
+		showAnalyser();
 	}
 
 	private String[] getLabNames() {
@@ -314,5 +337,43 @@ public class InputGUI implements InputAnalyser {
 	public int getIntervalTime(){
 		int[] intervals = {1,12,24,168,672,2016,8064};
 		return intervals[durationComboBox.getSelectedIndex()];
+	}
+	
+	public String getIntervalName(){
+		
+		return durationComboBox.getSelectedItem().toString();
+	}
+	public boolean getADataType(){
+		return aPowerButton.isSelected();
+	}
+	public void showAnalyser(){
+		analysisDataLabel.setVisible(true);
+		aPowerButton.setVisible(true);
+		aOccupancyButton.setVisible(true);
+		
+		seriesLabel.setVisible(false);
+		cOButton.setVisible(false);
+		splitButton.setVisible(false);
+		powerButton.setVisible(false);
+		
+		selectDurationLabel.setVisible(true);
+		durationComboBox.setVisible(true);
+	}
+	public void showGrapher(){
+		analysisDataLabel.setVisible(false);
+		aPowerButton.setVisible(false);
+		aOccupancyButton.setVisible(false);
+		
+		seriesLabel.setVisible(true);
+		cOButton.setVisible(true);
+		splitButton.setVisible(true);
+		powerButton.setVisible(true);
+		
+		selectDurationLabel.setVisible(false);
+		durationComboBox.setVisible(false);
+	}
+	
+	public void showPredicter(){
+		
 	}
 }

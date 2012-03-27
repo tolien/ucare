@@ -14,18 +14,14 @@ import parser.DataSource;
 
 public class GoListener implements ActionListener {
 
-	private static final int GRAPH_HEIGHT = 800;
-	private static final int GRAPH_WIDTH_INTERVAL = 50;
+	private static final int GRAPH_HEIGHT = 600;
 
 	private DataSource source;
 
 	private InputAnalyser input;
 
 	public GoListener(InputAnalyser input) {
-		
-		
 		this.input = input;
-
 		source=input.getDataSource();
 	}
 
@@ -47,12 +43,12 @@ public class GoListener implements ActionListener {
 				graphTool = AnalysisGrapher.getInstance();
 				AnalysisGrapher.getInstance().setDataSource(source);
 				AnalysisGrapher.getInstance().setRequestedData(labs, startDate, endDate, 
-						input.getIntervalTime(), "Hourly", false);
+						input.getIntervalTime(), input.getIntervalName(), input.getADataType());
 			}
 			
 			
-			int days = (int) ((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
-			new GraphGUI(graphTool.getGraph(1024,GRAPH_HEIGHT - 1));
+			
+			new GraphGUI(graphTool.getGraph(1200,GRAPH_HEIGHT - 1));
 		}
 	}
 

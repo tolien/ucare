@@ -10,7 +10,7 @@ import javax.swing.JScrollPane;
 
 public class GraphGUI {
 
-	private static final int MIN_WIDTH = 800;
+	private static final int MIN_WIDTH = 1200;
 
 	private JFrame frame = new JFrame("Lab Occupancy Analyser");
 
