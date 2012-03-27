@@ -19,7 +19,7 @@ import org.jfree.ui.RectangleInsets;
 
 import parser.DataSource;
 
-public class Grapher implements GraphTool {
+public class Grapher implements GraphTool, ImageGenerator {
 	private static Grapher instance = null;
 	private TimeSeriesCollection occupancy = null;
 	private TimeSeriesCollection power = null;
@@ -93,6 +93,24 @@ public class Grapher implements GraphTool {
 		dataset.addSeries(s1);
 
 	}
+	
+	private void createMultiDataset(String labName, Date start, Date end,
+			Map<Date, List<Double>> labData, TimeSeriesCollection dataset, String namePostfix, double multiplier) {
+		//Using this rather than calling create dataset 3X means it can be done in 1 pass
+		
+		
+		// Ensure dates are in order
+		TreeSet<Date> keys = new TreeSet<Date>(labData.keySet());
+		int count = labData.get(keys.first()).size();
+		for (int i = 0; i < count; i++) {
+			TimeSeries s1 = new TimeSeries(labName+namePostfix+" unit "+i);
+			for (Date key : keys) {
+				if (key.compareTo(start) >= 0 && key.compareTo(end) <= 0)
+					s1.add(new Minute(key), labData.get(key).get(i)*multiplier);
+			}
+			dataset.addSeries(s1);
+		}
+	}
 
 	@Override
 	public JPanel getGraph(int xSize, int ySize) {
@@ -108,17 +126,29 @@ public class Grapher implements GraphTool {
 	}
 
 	@Override
-	public void setRequestedData(List<String> labs, Date start, Date end) {
+	public void setRequestedData(List<String> labs, Date start, Date end, int axisType) {
+		
+		boolean splitPower = axisType==2;
 		power = new TimeSeriesCollection();
 		occupancy = new TimeSeriesCollection();
-		for (String string : labs) {
-			Map<Date, Double> labData = dataStore.getAbsoluteOccupancy(string, start, end);
-			createDataset(string, start, end, labData, occupancy, "", 1);
+		for (String labName : labs) {
+			Map<Date, Double> labData = dataStore.getAbsoluteOccupancy(labName, start, end);
+			createDataset(labName, start, end, labData, occupancy, "", 1);
 			
-			Map<Date, Double> labPower = dataStore.getTotalPower(string);
-			if (labPower != null)
-				createDataset(string, start, end, labPower, power, " Power", 0.001);
-			
+			if(splitPower){
+				Map<Date,List <Double>> labPower=dataStore.getPower(labName);
+				if(labPower !=null)
+				createMultiDataset(labName, start, end, labPower, power, " Power", 0.001);
+			}else{
+				Map<Date, Double> labPower;
+				if(axisType==1){
+					labPower = dataStore.getTotalPower(labName);
+				}else{
+					 labPower = dataStore.getCO2(labName);
+				}
+				if (labPower != null)
+					createDataset(labName, start, end, labPower, power, " Power", 0.001);
+			}
 		}
 	}
 

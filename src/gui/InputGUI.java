@@ -1,7 +1,5 @@
 package gui;
 
-import graphing.Grapher;
-
 import java.awt.Container;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -21,7 +19,6 @@ import javax.swing.JRadioButton;
 
 import occupancy.Utility;
 
-import parser.CISParserFactory;
 import parser.DSParserFactory;
 import parser.DataSource;
 import parser.Parser;
@@ -52,10 +49,19 @@ public class InputGUI implements InputAnalyser {
 	private JComboBox endMinuteComboBox;
 	
 	private JLabel dataTypeLabel = new JLabel("Select data type:");
-	private ButtonGroup buttonGroup = new ButtonGroup();
+	private ButtonGroup graphType = new ButtonGroup();
 	private JRadioButton rawButton = new JRadioButton("Raw");
 	private JRadioButton analysedButton = new JRadioButton("Analysed");
-
+	
+	private JLabel seriesLabel = new JLabel("Select field 2:");
+	private ButtonGroup seriesType = new ButtonGroup();
+	private JRadioButton cOButton = new JRadioButton("CO2");
+	private JRadioButton splitButton = new JRadioButton("Split Power");
+	private JRadioButton powerButton = new JRadioButton("Total Power");
+	
+	private JLabel selectDurationLabel = new JLabel("Select Analysis Granularity:");
+	private JComboBox durationComboBox;
+	
 	private JButton goButton = new JButton("Go");
 
 	private List<ParserFactory> factories = new ArrayList<ParserFactory>();
@@ -83,7 +89,7 @@ public class InputGUI implements InputAnalyser {
 				setupGUI();
 
 				frame.setLocation(4, 4);
-				frame.setSize(375, 200);
+				frame.setSize(450, 250);
 				frame.setResizable(false);
 				frame.setVisible(true);
 				frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -126,18 +132,38 @@ public class InputGUI implements InputAnalyser {
 		
 		mainPanel.add(dataTypeLabel);
 		dataTypeLabel.setBounds(10, 103, 100, 15);
-		buttonGroup.add(rawButton);
-		buttonGroup.add(analysedButton);
+		graphType.add(rawButton);
+		graphType.add(analysedButton);
 		analysedButton.setSelected(true);
 		mainPanel.add(rawButton);
 		rawButton.setBounds(117, 104, 50, 15);
 		mainPanel.add(analysedButton);
 		analysedButton.setBounds(167, 104, 100, 15);
 
+		mainPanel.add(seriesLabel);
+		seriesLabel.setBounds(10, 119, 100, 15);
+		seriesType.add(cOButton);
+		seriesType.add(splitButton);
+		seriesType.add(powerButton);
+		powerButton.setSelected(true);
+		
+		mainPanel.add(cOButton);
+		cOButton.setBounds(117, 119, 50, 15);
+		mainPanel.add(splitButton);
+		splitButton.setBounds(167, 119, 90, 15);
+		mainPanel.add(powerButton);
+		powerButton.setBounds(257, 119, 105, 15);
+		
+		mainPanel.add(selectDurationLabel);
+		selectDurationLabel.setBounds(10, 133, 160, 20);
+		String[] periods = {"Hours", "Half-Day", "Day", "Week", "Month", "Quarter", "Year"};
+		durationComboBox = new JComboBox(periods);
+		mainPanel.add(durationComboBox);
+		durationComboBox.setBounds(170, 133, 230, 20);
+		
 		mainPanel.add(goButton);
-		goButton.setBounds(120, 131, 50, 30);
-		goButton.addActionListener(new GoListener(this, Grapher
-				.getInstance()));
+		goButton.setBounds(120, 153, 50, 30);
+		goButton.addActionListener(new GoListener(this));
 	}
 
 	private String[] getLabNames() {
@@ -209,6 +235,13 @@ public class InputGUI implements InputAnalyser {
 		calendar.set(Calendar.MILLISECOND, 0);
 		return calendar.getTime();
 	}
+	
+	public int getGraphType(){
+		if(rawButton.isSelected()){
+			return 1;
+		}
+		else return 2;
+	}
 
 	public void datesWrongOrder() {
 		JOptionPane.showMessageDialog(frame,
@@ -266,5 +299,20 @@ public class InputGUI implements InputAnalyser {
 
 	public DataSource getDataSource() {
 		return parser;
+	}
+
+	@Override
+	public int getAxis2Type() {
+		
+			if(powerButton.isSelected()){
+				return 1;
+			}else if (splitButton.isSelected()){return 2;}
+			else{return 3;}
+		
+	}
+	
+	public int getIntervalTime(){
+		int[] intervals = {1,12,24,168,672,2016,8064};
+		return intervals[durationComboBox.getSelectedIndex()];
 	}
 }

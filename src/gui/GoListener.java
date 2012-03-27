@@ -1,26 +1,32 @@
 package gui;
 
-import graphing.GraphTool;
+import graphing.AnalysisGrapher;
+import graphing.Grapher;
+import graphing.ImageGenerator;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import parser.DataSource;
+
 public class GoListener implements ActionListener {
 
 	private static final int GRAPH_HEIGHT = 800;
 	private static final int GRAPH_WIDTH_INTERVAL = 50;
 
-	private GraphTool graphTool;
+	private DataSource source;
 
 	private InputAnalyser input;
 
-	public GoListener(InputAnalyser input, GraphTool grapher) {
-		this.graphTool = grapher;
+	public GoListener(InputAnalyser input) {
+		
+		
 		this.input = input;
 
-		this.graphTool.setDataSource(input.getDataSource());
+		source=input.getDataSource();
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -32,10 +38,21 @@ public class GoListener implements ActionListener {
 		} else {
 			List<String> labs = new ArrayList<String>();
 			labs.add(lab);
-			graphTool.setRequestedData(labs, startDate, endDate);
+			ImageGenerator graphTool;
+			if(input.getGraphType()==1){
+				graphTool = Grapher.getInstance();
+				Grapher.getInstance().setDataSource(source);
+				Grapher.getInstance().setRequestedData(labs, startDate, endDate,input.getAxis2Type());
+			}else{
+				graphTool = AnalysisGrapher.getInstance();
+				AnalysisGrapher.getInstance().setDataSource(source);
+				AnalysisGrapher.getInstance().setRequestedData(labs, startDate, endDate, 
+						input.getIntervalTime(), "Hourly", false);
+			}
+			
+			
 			int days = (int) ((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
-			new GraphGUI(graphTool.getGraph(GRAPH_WIDTH_INTERVAL * days,
-					GRAPH_HEIGHT - 1));
+			new GraphGUI(graphTool.getGraph(1024,GRAPH_HEIGHT - 1));
 		}
 	}
 

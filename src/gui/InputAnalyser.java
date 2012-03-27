@@ -15,5 +15,10 @@ public interface InputAnalyser {
 	public void datesWrongOrder();
 	
 	public DataSource getDataSource();
+	
+	public int getGraphType();
+	
+	public int getAxis2Type();
 
+	public int getIntervalTime();
 }
