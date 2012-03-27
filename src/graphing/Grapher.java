@@ -136,15 +136,15 @@ public class Grapher implements GraphTool, ImageGenerator {
 			createDataset(labName, start, end, labData, occupancy, "", 1);
 			
 			if(splitPower){
-				Map<Date,List <Double>> labPower=dataStore.getPower(labName);
+				Map<Date,List <Double>> labPower=dataStore.getPower(labName, start, end);
 				if(labPower !=null)
 				createMultiDataset(labName, start, end, labPower, power, " Power", 0.001);
 			}else{
 				Map<Date, Double> labPower;
 				if(axisType==1){
-					labPower = dataStore.getTotalPower(labName);
+					labPower = dataStore.getTotalPower(labName, start, end);
 				}else{
-					 labPower = dataStore.getCO2(labName);
+					 labPower = dataStore.getCO2(labName, start, end);
 				}
 				if (labPower != null)
 					createDataset(labName, start, end, labPower, power, " Power", 0.001);

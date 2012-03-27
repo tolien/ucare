@@ -111,8 +111,7 @@ public class Parser implements DataSource
 		return dir.list(filter);
 	}
 
-	@Override
-	public Map<Date, Double> getAbsoluteOccupancy(String lab)
+	private Map<Date, Double> getAbsoluteOccupancy(String lab)
 	{
 		CompletionService<Map<Date, Double>> cs = new ExecutorCompletionService<Map<Date, Double>>(getExecutor());
 		Map<Date, Double> result = new HashMap<Date, Double>();
@@ -146,8 +145,7 @@ public class Parser implements DataSource
 		return result;
 	}
 	
-	@Override
-	public Map<Date, Double> getRelativeOccupancy(String lab)
+	private Map<Date, Double> getRelativeOccupancy(String lab)
 	{
 		CompletionService<Map<Date, Double>> cs = new ExecutorCompletionService<Map<Date, Double>>(getExecutor());
 		Map<Date, Double> result = new HashMap<Date, Double>();
@@ -204,7 +202,7 @@ public class Parser implements DataSource
 	}
 
 	@Override
-	public Map<Date, List<Double>> getPower(String string)
+	public Map<Date, List<Double>> getPower(String string, Date start, Date end)
 	{	
 		Map<Date, List<Double>> result = new HashMap<Date, List<Double>>();
 		
@@ -212,7 +210,7 @@ public class Parser implements DataSource
 		while (powerIt.hasNext())
 		{
 			Power p = powerIt.next();
-			Map<Date, List<Double>> power = p.getPower();
+			Map<Date, List<Double>> power = p.getPower(start, end);
 			if (power != null && power.size() > 0)
 			{
 				result.putAll(power);
@@ -223,7 +221,7 @@ public class Parser implements DataSource
 	}
 	
 	@Override
-	public Map<Date, Double> getTotalPower(String string)
+	public Map<Date, Double> getTotalPower(String string, Date start, Date end)
 	{	
 		Map<Date, Double> result = new HashMap<Date, Double>();
 		
@@ -231,7 +229,7 @@ public class Parser implements DataSource
 		while (powerIt.hasNext())
 		{
 			Power p = powerIt.next();
-			Map<Date, Double> power = p.getTotalPower();
+			Map<Date, Double> power = p.getTotalPower(start, end);
 			if (power != null && power.size() > 0)
 			{
 				result.putAll(power);
@@ -245,6 +243,9 @@ public class Parser implements DataSource
 	public Map<Date, Double> getAbsoluteOccupancy(String labName, Date start,
 			Date end)
 	{
+		if (start == null || end == null)
+			return getAbsoluteOccupancy(labName);
+		
 		CompletionService<Map<Date, Double>> cs = new ExecutorCompletionService<Map<Date, Double>>(getExecutor());
 		Map<Date, Double> result = new HashMap<Date, Double>();
 		
@@ -282,7 +283,10 @@ public class Parser implements DataSource
 	@Override
 	public Map<Date, Double> getRelativeOccupancy(String labName, Date start,
 			Date end)
-	{	
+	{
+		if (start == null || end == null)
+			return getRelativeOccupancy(labName);
+		
 		CompletionService<Map<Date, Double>> cs = new ExecutorCompletionService<Map<Date, Double>>(getExecutor());
 		Map<Date, Double> result = new HashMap<Date, Double>();
 		
@@ -320,7 +324,7 @@ public class Parser implements DataSource
 	}
 
 	@Override
-	public Map<Date, List<Double>> getTemperature(String labName)
+	public Map<Date, List<Double>> getTemperature(String labName, Date start, Date end)
 	{	
 		Map<Date, List<Double>> result = new HashMap<Date, List<Double>>();
 		
@@ -328,7 +332,7 @@ public class Parser implements DataSource
 		while (powerIt.hasNext())
 		{
 			Power p = powerIt.next();
-			Map<Date, List<Double>> temp = p.getTemperature();
+			Map<Date, List<Double>> temp = p.getTemperature(start, end);
 			if (temp != null && temp.size() > 0)
 			{
 				result.putAll(temp);
@@ -339,7 +343,7 @@ public class Parser implements DataSource
 	}
 	
 	@Override
-	public Map<Date, Double> getAverageTemperature(String labName)
+	public Map<Date, Double> getAverageTemperature(String labName, Date start, Date end)
 	{
 		Map<Date, Double> result = new HashMap<Date, Double>();
 		
@@ -347,7 +351,7 @@ public class Parser implements DataSource
 		while (powerIt.hasNext())
 		{
 			Power p = powerIt.next();
-			Map<Date, List<Double>> temp = p.getTemperature();
+			Map<Date, List<Double>> temp = p.getTemperature(start, end);
 			if (temp != null && temp.size() > 0)
 			{
 				Iterator<Date> it = temp.keySet().iterator();
@@ -363,7 +367,7 @@ public class Parser implements DataSource
 	}
 
 	@Override
-	public Map<Date, Double> getCO2(String labName)
+	public Map<Date, Double> getCO2(String labName, Date start, Date end)
 	{	
 		Map<Date, Double> result = new HashMap<Date, Double>();
 		
@@ -371,7 +375,7 @@ public class Parser implements DataSource
 		while (powerIt.hasNext())
 		{
 			Power p = powerIt.next();
-			Map<Date, Double> co2 = p.getCO2();
+			Map<Date, Double> co2 = p.getCO2(start, end);
 			if (co2 != null && co2.size() > 0)
 			{
 				result.putAll(co2);

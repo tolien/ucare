@@ -38,13 +38,25 @@ public class DSPowerParser implements Power
 	}
 
 	@Override
-	public Map<Date, List<Double>> getPower()
+	public Map<Date, List<Double>> getPower(Date start, Date end)
 	{
-		return powerData;
+		Map<Date, List<Double>> result = new HashMap<Date, List<Double>>();
+		Iterator<Date> it = powerData.keySet().iterator();
+		
+		while (it.hasNext())
+		{
+			Date d = it.next();
+			if (d.compareTo(start) >= 0 && d.compareTo(end) <= 0)
+			{
+				result.put(d, powerData.get(d));
+			}
+		}
+		
+		return result;
 	}
 
 	@Override
-	public Map<Date, Double> getTotalPower()
+	public Map<Date, Double> getTotalPower(Date start, Date end)
 	{
 		Map<Date, Double> totals = new HashMap<Date, Double>();
 
@@ -52,16 +64,20 @@ public class DSPowerParser implements Power
 		while (it.hasNext())
 		{
 			Date d = it.next();
-			List<Double> power = powerData.get(d);
-
-			double totalPower = 0.0;
-			Iterator<Double> pIt = power.iterator();
-			while (pIt.hasNext())
+			
+			if (d.compareTo(start) >= 0 && d.compareTo(end) <= 0)
 			{
-				totalPower += pIt.next();
+				List<Double> power = powerData.get(d);
+	
+				double totalPower = 0.0;
+				Iterator<Double> pIt = power.iterator();
+				while (pIt.hasNext())
+				{
+					totalPower += pIt.next();
+				}
+	
+				totals.put(d, totalPower);
 			}
-
-			totals.put(d, totalPower);
 		}
 
 		return totals;
@@ -171,14 +187,36 @@ public class DSPowerParser implements Power
 	}
 
 	@Override
-	public Map<Date, List<Double>> getTemperature()
+	public Map<Date, List<Double>> getTemperature(Date start, Date end)
 	{
-		return tempData;
+		Map<Date, List<Double>> result = new HashMap<Date, List<Double>>();
+
+		Iterator<Date> it = tempData.keySet().iterator();
+		while (it.hasNext())
+		{
+			Date d = it.next();
+			if (d.compareTo(start) >= 0 && d.compareTo(end) <= 0)
+			{
+				result.put(d, tempData.get(d));
+			}
+		}
+		return result;
 	}
 
 	@Override
-	public Map<Date, Double> getCO2()
+	public Map<Date, Double> getCO2(Date start, Date end)
 	{
-		return co2Data;
+		Map<Date, Double> result = new HashMap<Date, Double>();
+
+		Iterator<Date> it = co2Data.keySet().iterator();
+		while (it.hasNext())
+		{
+			Date d = it.next();
+			if (d.compareTo(start) >= 0 && d.compareTo(end) <= 0)
+			{
+				result.put(d, co2Data.get(d));
+			}
+		}
+		return result;
 	}
 }

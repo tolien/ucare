@@ -22,7 +22,7 @@ public class PredictionDriver
 			pred.addAnalyser(new DayOfWeekAnalysis());
 			pred.addAnalyser(new HourOfDayAnalysis());
 			pred.addAnalyser(new MonthOfYearAnalysis());
-			Map<Date, Double> data = parser.getRelativeOccupancy("Hills-634");
+			Map<Date, Double> data = parser.getRelativeOccupancy("Hills-634", null, null);
 			pred.occupancyData(data);
 			
 			Calendar c = Calendar.getInstance();

@@ -72,7 +72,7 @@ public class AnalysisGrapher implements AnalysisGraphTool, ImageGenerator {
 		for (String labName : labs) {
 			
 			if (isPower){
-				 labData= dataStore.getTotalPower(labName);	
+				 labData= dataStore.getTotalPower(labName, start, end);	
 				 axisLabel = "KW";
 			}else{
 				 labData = dataStore.getAbsoluteOccupancy(labName, start, end);
