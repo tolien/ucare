@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="build" name="Create Runnable Jar for Project LabActivityParser">
+    <property name="src.dir" value="src" />
+    <property name="bin.dir" value="bin" />
+    <property name="lib.dir" value="lib" />
+    <path id="classpath">
+    	<fileset dir="${lib.dir}" includes="*.jar" />
+    </path>
+    
+    <target name="create_run_jar">
+        <jar destfile="parser.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+                <attribute name="Main-Class" value="gui.InputGUI"/>
+                <attribute name="Class-Path" value="."/>
+            </manifest>
+            <fileset dir="bin"/>
+            <file file="LabNames.txt" />
+            <zipfileset excludes="META-INF/*.SF" src="lib/jcommon-1.0.17.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="lib/jfreechart-1.0.14.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="lib/nachocalendar-0.23.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="lib/nachocalendar-0.23-demo.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="lib/opencsv-2.3.jar"/>
+        </jar>
+    </target>
+    
+    <target name="compile" depends="clean">
+    	<mkdir dir="${bin.dir}" />
+    	<javac destdir="${bin.dir}" classpathref="classpath" includeantruntime="true" verbose="yes">
+    		<compilerarg value="-Xlint:deprecation" />
+	    	<src path="${src.dir}" />
+    		<exclude name="tests/**" />
+    	</javac>
+    </target>
+    
+    <target name="clean">
+    	<delete dir="${bin.dir}" />
+    </target>
+    
+    <target name="build" depends="compile,create_run_jar" />
+</project>
