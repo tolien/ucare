@@ -65,7 +65,7 @@ public class DSPowerParser implements Power
 		{
 			Date d = it.next();
 			
-			if (d.compareTo(start) >= 0 && d.compareTo(end) <= 0)
+			if ((start == null || end == null) || d.compareTo(start) >= 0 && d.compareTo(end) <= 0)
 			{
 				List<Double> power = powerData.get(d);
 	
