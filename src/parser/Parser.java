@@ -245,53 +245,25 @@ public class Parser extends Observable implements DataSource
 	public Map<Date, Double> getAbsoluteOccupancy(String labName, Date start,
 			Date end)
 	{
-		if (start == null || end == null)
-			return getAbsoluteOccupancy(labName);
-		
-		CompletionService<Map<Date, Double>> cs = new ExecutorCompletionService<Map<Date, Double>>(getExecutor());
-		Map<Date, Double> result = new HashMap<Date, Double>();
-		
-		Iterator<Occupancy> it = occupancyFiles.iterator();
-		while (it.hasNext())
-		{
-			cs.submit(new OccupancyFetcher(it.next(), labName, start, end));
-		}
-		
-		for (int i = 0; i < occupancyFiles.size(); i++)
-		{
-			Map<Date, Double> occupancy;
-			try
-			{
-				occupancy = cs.take().get();
-				if (occupancy != null && occupancy.size() > 0)
-					result.putAll(occupancy);
-			
-				setChanged();
-				double progress = i / (double) occupancyFiles.size();
-				notifyObservers(progress);
-				
-			} catch (InterruptedException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ExecutionException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
-		execService.shutdown();
-		
-		return result;
+		return getOccupancy(labName, start, end, false);
 	}
 	
 	@Override
 	public Map<Date, Double> getRelativeOccupancy(String labName, Date start,
 			Date end)
 	{
+		return getOccupancy(labName, start, end, true);
+	}
+	
+	private Map<Date, Double> getOccupancy(String lab, Date start, Date end, boolean relative)
+	{
 		if (start == null || end == null)
-			return getRelativeOccupancy(labName);
+		{
+			if (relative)
+				return getRelativeOccupancy(lab);
+			else
+				return getAbsoluteOccupancy(lab);
+		}
 		
 		CompletionService<Map<Date, Double>> cs = new ExecutorCompletionService<Map<Date, Double>>(getExecutor());
 		Map<Date, Double> result = new HashMap<Date, Double>();
@@ -299,8 +271,8 @@ public class Parser extends Observable implements DataSource
 		Iterator<Occupancy> it = occupancyFiles.iterator();
 		while (it.hasNext())
 		{
-			OccupancyFetcher fetch = new OccupancyFetcher(it.next(), labName, start, end);
-			fetch.setRelative(true);
+			OccupancyFetcher fetch = new OccupancyFetcher(it.next(), lab, start, end);
+			fetch.setRelative(relative);
 			cs.submit(fetch);
 		}
 		
