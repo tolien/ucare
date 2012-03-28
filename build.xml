@@ -25,8 +25,8 @@
     
     <target name="compile" depends="clean">
     	<mkdir dir="${bin.dir}" />
-    	<javac destdir="${bin.dir}" classpathref="classpath" includeantruntime="true" verbose="yes">
-    		<compilerarg value="-Xlint:deprecation" />
+    	<javac destdir="${bin.dir}" classpathref="classpath" includeantruntime="true" >
+    		<compilerarg value="-Xlint" />
 	    	<src path="${src.dir}" />
     		<exclude name="tests/**" />
     	</javac>
