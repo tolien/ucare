@@ -24,6 +24,7 @@ public class Parser extends Observable implements DataSource
 	private CompletionService<Occupancy> ecs;
 	private CompletionService<Power> powerEcs;
 	private List<String> labs;
+	private Map<String, Integer> capacities;
 	
 	private List<Occupancy> occupancyFiles;
 	private List<Power> powerFiles;
@@ -35,6 +36,7 @@ public class Parser extends Observable implements DataSource
 		occupancyFiles = new ArrayList<Occupancy>();
 		powerFiles = new ArrayList<Power>();
 		labs = new ArrayList<String>();
+		capacities = new HashMap<String, Integer>();
 	}
 	
 	private ExecutorService getExecutor()
@@ -68,6 +70,7 @@ public class Parser extends Observable implements DataSource
 				Occupancy rf = ecs.take().get();
 				this.occupancyFiles.add(rf);
 				fillLabList(rf.getLabList());
+				capacities = rf.getCapacity();
 			}
 			
 			files = fileList(dir, ".csv");
@@ -365,5 +368,11 @@ public class Parser extends Observable implements DataSource
 		}
 		
 		return result;
+	}
+
+	@Override
+	public int getLabCapacity(String lab)
+	{
+		return capacities.get(lab);
 	}
 }

@@ -34,6 +34,7 @@ public class DSParser implements Occupancy
 	private CSVReader reader;
 
 	private Map<String, Map<Date, Double[]>> data;
+	private Map<String, Integer> capacity;
 	
 	public void setFile(File f) throws FileNotFoundException
 	{
@@ -99,6 +100,7 @@ public class DSParser implements Occupancy
 				Double[] entry = { occupancy, occupancy / machines };
 				labData.put(time,  entry);
 				data.put(labName, labData);
+				capacity.put(labName, machines.intValue());
 					
 			}
 		} catch (NumberFormatException e)
@@ -226,6 +228,12 @@ public class DSParser implements Occupancy
 		}
 		
 		return result;
+	}
+	
+	@Override
+	public Map<String, Integer> getCapacity()
+	{
+		return capacity;
 	}
 	
 }
