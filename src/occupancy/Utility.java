@@ -62,4 +62,38 @@ public class Utility
 
 		return sum;
 	}
+	
+	public static Double max(List<Double> list)
+	{
+		double max = Integer.MIN_VALUE;
+		Iterator<Double> it = list.iterator();
+		
+		while (it.hasNext())
+		{
+			Double i = it.next();
+			if (i > max)
+			{
+				max = i + 0.0;
+			}
+		}
+		
+		return (max != Integer.MIN_VALUE) ? max : 0.0;
+	}
+	
+	public static Double min(List<Double> list)
+	{
+		double min = Integer.MAX_VALUE;
+		Iterator<Double> it = list.iterator();
+		
+		while (it.hasNext())
+		{
+			Double i = it.next();
+			if (i < min)
+			{
+				min = i + 0.0;
+			}
+		}
+		
+		return (min != Integer.MAX_VALUE) ? min : 0.0;
+	}
 }

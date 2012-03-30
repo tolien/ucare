@@ -75,19 +75,7 @@ public abstract class Analyser implements DataAnalyser
 	
 	protected Double max(List<Double> list)
 	{
-		double max = Integer.MIN_VALUE;
-		Iterator<Double> it = list.iterator();
-		
-		while (it.hasNext())
-		{
-			Double i = it.next();
-			if (i > max)
-			{
-				max = i + 0.0;
-			}
-		}
-		
-		return (max != Integer.MIN_VALUE) ? max : 0.0;
+		return Utility.max(list);
 	}
 	
 	protected Double min(List<Double> list)
