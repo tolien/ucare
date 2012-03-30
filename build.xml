@@ -3,6 +3,7 @@
     <property name="src.dir" value="src" />
     <property name="bin.dir" value="bin" />
     <property name="lib.dir" value="lib" />
+    
     <path id="classpath">
     	<fileset dir="${lib.dir}" includes="*.jar" />
     </path>
@@ -28,7 +29,6 @@
     	<javac destdir="${bin.dir}" classpathref="classpath" includeantruntime="true" >
     		<compilerarg value="-Xlint:none" />
 	    	<src path="${src.dir}" />
-    		<exclude name="tests/**" />
     	</javac>
     </target>
     
