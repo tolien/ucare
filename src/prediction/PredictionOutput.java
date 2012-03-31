@@ -3,7 +3,6 @@ package prediction;
 import graphing.ImageGenerator;
 
 import java.awt.Dimension;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -13,7 +12,6 @@ import javax.swing.JTable;
 
 import parser.DataSource;
 
-import analyser.DayOfMonthAnalysis;
 import analyser.DayOfWeekAnalysis;
 import analyser.HourOfDayAnalysis;
 import analyser.MonthOfYearAnalysis;
@@ -23,9 +21,10 @@ private Predictor predictor;
 private Date start;
 private Date end;
 private JTable table;
-
+private int capacity;
 
 	public PredictionOutput(String labName, Date start, Date end, DataSource dataSource){
+		capacity = dataSource.getLabCapacity(labName);
 		this.start = start;
 		this.end = end;
  		predictor = new OccupancyBasedPrediction();
@@ -57,7 +56,7 @@ private JTable table;
 			//for 8-6
 			daysValues[row][0]=c.get(Calendar.DATE)+"/"+c.get(Calendar.MONTH)+"/"+c.get(Calendar.YEAR);
 			for (int i=1; i<12;i++){
-				daysValues[row][i]=Math.round(predictor.getProbability(c.getTime())*106*10);
+				daysValues[row][i]=Math.round(predictor.getProbability(c.getTime())*capacity*10);
 				System.out.println(predictor.getProbability(c.getTime()));;
 				c.add(Calendar.HOUR, 1);
 			}

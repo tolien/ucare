@@ -17,5 +17,6 @@ public interface DataSource
 	public Map<Date, List<Double>> getTemperature(String labName, Date start, Date end);
 	public Map<Date, Double> getAverageTemperature(String labName, Date start, Date end);
 	public Map<Date, Double> getCO2(String labName, Date start, Date end);
+	
 		
 }
