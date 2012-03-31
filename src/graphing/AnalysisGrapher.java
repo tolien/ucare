@@ -59,7 +59,7 @@ public class AnalysisGrapher implements AnalysisGraphTool, ImageGenerator {
 
 	private JFreeChart createChart() {
 		JFreeChart chart = ChartFactory.createBoxAndWhiskerChart(
-				"Lab Analysis", "Time "+timeDesc, axisLabel, data, true);
+				"Lab Analysis", "Time "+timeDesc, axisLabel, data, false);
 		chart.setBackgroundPaint(new Color(249, 231, 236));
 		return chart;
 	}
