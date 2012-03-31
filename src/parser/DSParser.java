@@ -31,16 +31,19 @@ public class DSParser implements Occupancy
 	public Date maxTime;
 	public int max = 0;
 	
+	private File f;
+	private FileReader fr;
 	private CSVReader reader;
 
 	private Map<String, Map<Date, Double[]>> data;
 	private Map<String, Integer> capacity;
 	
-	public void setFile(File f) throws FileNotFoundException
+	public void setFile(File file) throws FileNotFoundException
 	{
 		data = new HashMap<String, Map<Date, Double[]>>();
 
-		FileReader fr = new FileReader(f);
+		f = file;
+		fr = new FileReader(f);
 		reader = new CSVReader(fr);
 		capacity = new HashMap<String, Integer>();
 	}
@@ -56,6 +59,7 @@ public class DSParser implements Occupancy
 	
 	private void read(String lab)
 	{
+		reset();
 		Map<String, Map<Date, Double[]>> set = readSet();
 
 		Map<Date, Double[]> existing = data.get(lab);
@@ -87,7 +91,7 @@ public class DSParser implements Occupancy
 		
 		try
 		{
-			while ((nextLine = reader.readNext()) != null && nextLine.length > 1)
+			while ((nextLine = reader.readNext()) != null && nextLine.length == 6)
 			{
 				Date time;
 				time = dateFormatter.parse(nextLine[DATE] + " "
@@ -126,44 +130,9 @@ public class DSParser implements Occupancy
 	{
 		this.read(1);
 		return this;
-	}	
-	
-	public Map<Date, Double> getAbsoluteOccupancy(String lab)
-	{
-		read(lab);
-		
-		Map<Date, Double> result = new HashMap<Date, Double>();
-		
-		Map<Date, Double[]> labData = data.get(lab);
-		Iterator<Date> it = labData.keySet().iterator();
-		while (it.hasNext())
-		{
-			Date d = it.next();
-			Double[] occupancy = labData.get(d);
-			result.put(d, occupancy[0]);
-		}
-		
-		return result;
 	}
 	
-	public Map<Date, Double> getRelativeOccupancy(String lab)
-	{
-		read(lab);
-		
-		Map<Date, Double> result = new HashMap<Date, Double>();
-		
-		Map<Date, Double[]> labData = data.get(lab);
-		Iterator<Date> it = labData.keySet().iterator();
-		while (it.hasNext())
-		{
-			Date d = it.next();
-			Double[] occupancy = labData.get(d);
-			result.put(d, occupancy[1]);
-		}
-		
-		return result;
-	}
-	
+	@Override
 	public List<String> getLabList()
 	{
 		List<String> list = new ArrayList<String>();
@@ -190,7 +159,12 @@ public class DSParser implements Occupancy
 		while (it.hasNext())
 		{
 			Date d = it.next();
-			if (d.compareTo(start) < 0 || d.compareTo(end) > 0)
+			/**
+			 *  if start or end are not null
+			 *  	and start is after the date or end is before the date
+			 *  then return null
+			 */
+			if ((start != null && d.compareTo(start) < 0) || (end != null && d.compareTo(end) > 0))
 			{
 				return null;
 			}
@@ -217,7 +191,7 @@ public class DSParser implements Occupancy
 		while (it.hasNext())
 		{
 			Date d = it.next();
-			if (d.compareTo(start) < 0 || d.compareTo(end) > 0)
+			if ((start != null && d.compareTo(start) < 0) || (end != null && d.compareTo(end) > 0))
 			{
 				return null;
 			}
@@ -235,6 +209,18 @@ public class DSParser implements Occupancy
 	public Map<String, Integer> getCapacity()
 	{
 		return capacity;
+	}
+	
+	private void reset()
+	{
+		try
+		{
+			fr = new FileReader(f);
+			reader = new CSVReader(fr);
+		} catch (IOException e)
+		{	}
+		
+		reader = new CSVReader(fr);
 	}
 	
 }

@@ -35,17 +35,11 @@ public class OccupancyFetcher implements Callable<Map<Date, Double>>
 	{
 		if (isRelative == false)
 		{
-			if (start == null || end == null)
-				return occupancy.getAbsoluteOccupancy(lab);
-			else
-				return occupancy.getAbsoluteOccupancy(lab, start, end);
+			return occupancy.getAbsoluteOccupancy(lab, start, end);
 		}
 		else
 		{
-			if (start == null || end == null)
-				return occupancy.getRelativeOccupancy(lab);
-			else
-				return occupancy.getRelativeOccupancy(lab, start, end);
+			return occupancy.getRelativeOccupancy(lab, start, end);
 		}
 	}
 
