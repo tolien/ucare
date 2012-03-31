@@ -42,6 +42,7 @@ public class DSParser implements Occupancy
 
 		FileReader fr = new FileReader(f);
 		reader = new CSVReader(fr);
+		capacity = new HashMap<String, Integer>();
 	}
 
 	private void read(int sets)
