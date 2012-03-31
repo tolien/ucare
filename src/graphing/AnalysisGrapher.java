@@ -3,6 +3,7 @@ package graphing;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -65,7 +66,7 @@ public class AnalysisGrapher implements AnalysisGraphTool, ImageGenerator {
 	}
 
 	@Override
-	public void setRequestedData(List<String> labs, Date start, Date end, int timePeriod,String timeDescrip, Boolean isPower) {
+	public void setRequestedData(List<String> labs, Date start, Date end, int timePeriod,String timeDescrip, boolean isPower, boolean limitData ) {
 		timeDesc=timeDescrip;
 		data = new DefaultBoxAndWhiskerXYDataset(1);
 		Map<Date, Double> labData=null;
@@ -80,27 +81,35 @@ public class AnalysisGrapher implements AnalysisGraphTool, ImageGenerator {
 			}			
 			
 			if (labData != null)
-				createDataset(labName,  timePeriod, labData, data,  1);
+				createDataset(labName,  timePeriod, labData, data,  1, limitData);
 			
 		}
 	}
 	
 	private void createDataset(String labName, int increments,
-			Map<Date, Double> labData, DefaultBoxAndWhiskerXYDataset dataset,  double multiplier) {
-		
+			Map<Date, Double> labData, DefaultBoxAndWhiskerXYDataset dataset,  double multiplier, boolean limitToWorkingDay) {
+		Calendar cal = Calendar.getInstance();
 		ArrayList<Double> dateBlock= new ArrayList<Double>();
 		// Ensure dates are in order
 		TreeSet<Date> keys = new TreeSet<Date>(labData.keySet());
 		Date start = keys.first();
 		Date marker = start;
-		for (Date key : keys) {
-				if (getTimeDiff(key, start)%increments ==0 && getMinDiff(key,start)==0 && dateBlock.size()>0){
+		for (Date day : keys) {
+				if (getTimeDiff(day, start)%increments ==0 && getMinDiff(day,start)==0 && dateBlock.size()>0){ 
 					dataset.add(marker, BoxAndWhiskerCalculator
 							.calculateBoxAndWhiskerStatistics(dateBlock));
 					dateBlock= new ArrayList<Double>();
-					marker = key;
+					marker = day;
 			}
-				dateBlock.add(labData.get(key)*multiplier);
+				cal.setTime(day);
+				int hour = cal.get(Calendar.HOUR_OF_DAY);
+				
+				if (hour<18 && hour>8 && limitToWorkingDay){
+					dateBlock.add(labData.get(day)*multiplier);
+				}
+				if (!limitToWorkingDay){
+					dateBlock.add(labData.get(day)*multiplier);
+				}
 
 		}	
 		if (dateBlock.size()>0)

@@ -32,4 +32,6 @@ public interface InputAnalyser {
 	
 	public void showPredicter();
 
+	public boolean getLimitData();
+
 }

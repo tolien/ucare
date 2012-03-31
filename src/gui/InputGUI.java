@@ -9,6 +9,7 @@ import java.util.List;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -67,6 +68,7 @@ public class InputGUI implements InputAnalyser {
 	
 	private JLabel selectDurationLabel = new JLabel("Select Analysis Granularity:");
 	private JComboBox durationComboBox;
+	private JCheckBox dropHoursCheck = new JCheckBox("Only Use 8-6");
 	
 	private JButton goButton = new JButton("Go");
 
@@ -178,7 +180,9 @@ public class InputGUI implements InputAnalyser {
 		mainPanel.add(aOccupancyButton);
 		aOccupancyButton.setBounds(125, 133, 100, 15);
 		mainPanel.add(aPowerButton);
-		aPowerButton.setBounds(225, 133, 90, 15);
+		aPowerButton.setBounds(225, 133, 70, 15);
+		mainPanel.add(dropHoursCheck);
+		dropHoursCheck.setBounds(295, 133, 100, 15);
 		
 		mainPanel.add(selectDurationLabel);
 		selectDurationLabel.setBounds(10, 148, 160, 20);
@@ -186,6 +190,7 @@ public class InputGUI implements InputAnalyser {
 		durationComboBox = new JComboBox(periods);
 		mainPanel.add(durationComboBox);
 		durationComboBox.setBounds(170, 148, 230, 20);
+		
 		
 		
 		mainPanel.add(goButton);
@@ -371,7 +376,10 @@ public class InputGUI implements InputAnalyser {
 		startMinuteComboBox.setVisible(true);
 		endHourComboBox.setVisible(true);
 		endMinuteComboBox.setVisible(true);
+		dropHoursCheck.setVisible(true);
+
 	}
+	
 	public void showGrapher(){
 		System.out.println("showing graph");
 		analysisDataLabel.setVisible(false);
@@ -390,6 +398,8 @@ public class InputGUI implements InputAnalyser {
 		startMinuteComboBox.setVisible(true);
 		endHourComboBox.setVisible(true);
 		endMinuteComboBox.setVisible(true);
+		dropHoursCheck.setVisible(false);
+
 	}
 	
 	public void showPredicter(){
@@ -410,5 +420,12 @@ public class InputGUI implements InputAnalyser {
 		startMinuteComboBox.setVisible(false);
 		endHourComboBox.setVisible(false);
 		endMinuteComboBox.setVisible(false);
+		
+		dropHoursCheck.setVisible(false);
+	}
+
+	@Override
+	public boolean getLimitData() {
+		return dropHoursCheck.isSelected();
 	}
 }

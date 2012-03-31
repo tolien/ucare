@@ -28,15 +28,15 @@ public class GoListener implements ActionListener, Observer {
 	private DataSource source;
 
 	private InputAnalyser input;
-	
+
 	private JPanel panel;
 	private JProgressBar progress;
 	private JFrame frame;
 	private static Lock lock = new ReentrantLock();
 
-	public GoListener(InputAnalyser input) {		
+	public GoListener(InputAnalyser input) {
 		this.input = input;
-		source=input.getDataSource();
+		source = input.getDataSource();
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -51,19 +51,17 @@ public class GoListener implements ActionListener, Observer {
 	}
 
 	@Override
-	public void update(Observable arg0, Object arg1)
-	{
+	public void update(Observable arg0, Object arg1) {
 		Double progress = ((Double) arg1) * 100;
 		int percentProgress = progress.intValue();
 		this.progress.setValue(percentProgress);
 	}
-	
-	private void setUpProgress()
-	{
+
+	private void setUpProgress() {
 		panel = new JPanel();
 		frame = new JFrame("Running");
 		frame.add(panel);
-		
+
 		progress = new JProgressBar();
 		((Observable) source).addObserver(this);
 		panel.add(progress);
@@ -71,11 +69,9 @@ public class GoListener implements ActionListener, Observer {
 		frame.setSize(300, 100);
 		frame.setVisible(true);
 	}
-	
-	private class ParserRunner extends Thread
-	{
-		public void run()
-		{
+
+	private class ParserRunner extends Thread {
+		public void run() {
 			lock.lock();
 			Date startDate = input.getStartDate();
 			Date endDate = input.getEndDate();
@@ -83,20 +79,24 @@ public class GoListener implements ActionListener, Observer {
 			List<String> labs = new ArrayList<String>();
 			labs.add(lab);
 			ImageGenerator graphTool;
-			if(input.getGraphType()==1){
+			if (input.getGraphType() == 1) {
 				graphTool = Grapher.getInstance();
 				Grapher.getInstance().setDataSource(source);
-				Grapher.getInstance().setRequestedData(labs, startDate, endDate,input.getAxis2Type());
-			}else if(input.getGraphType()==2){
+				Grapher.getInstance().setRequestedData(labs, startDate,
+						endDate, input.getAxis2Type());
+			} else if (input.getGraphType() == 2) {
 				graphTool = AnalysisGrapher.getInstance();
 				AnalysisGrapher.getInstance().setDataSource(source);
-				AnalysisGrapher.getInstance().setRequestedData(labs, startDate, endDate, 
-						input.getIntervalTime(), input.getIntervalName(), input.getADataType());
-			}else{
-				graphTool = new PredictionOutput(labs.get(0), startDate, endDate, source);
+				AnalysisGrapher.getInstance().setRequestedData(labs, startDate,
+						endDate, input.getIntervalTime(),
+						input.getIntervalName(), input.getADataType(),
+						input.getLimitData());
+			} else {
+				graphTool = new PredictionOutput(labs.get(0), startDate,
+						endDate, source);
 			}
-			
-			new GraphGUI(graphTool.getGraph(1024,GRAPH_HEIGHT - 1));
+
+			new GraphGUI(graphTool.getGraph(1024, GRAPH_HEIGHT - 1));
 			frame.setVisible(false);
 			frame.dispose();
 			lock.unlock();
