@@ -26,19 +26,23 @@ public class PredictionDriver
 			pred.occupancyData(data);
 			
 			Calendar c = Calendar.getInstance();
-			c.setTime(new Date(2011 - 1900, 9, 1, 0, 0, 0));
+			c.setTime(new Date(2012 - 1900, 2, 14, 0, 0, 0));
 
 			System.out.println(c.getTime());
 			List<Double> deviations = new ArrayList<Double>();
-			for (int i = 0; i < 2 * 24 * 7 * 20; i++)
+			for (int i = 0; i < 24 * 14; i++)
 			{
-				c.add(Calendar.MINUTE, 30);
-				double predUsers = pred.getProbability(c.getTime()) * 106 * 10;
+				c.add(Calendar.HOUR, 1);
+				Double predUsers = pred.getProbability(c.getTime()) * 106;
 				if (data.get(c.getTime()) != null)
 				{
-						double actualUsers = data.get(c.getTime()) * 106;
-						System.out.println(c.getTime() + "\t" + predUsers + "\t" + actualUsers);
+						Double actualUsers = data.get(c.getTime()) * 106;
+						System.out.println(c.getTime() + "\t" + predUsers.intValue() + "\t" + actualUsers.intValue());
 						deviations.add(predUsers - actualUsers);
+				}
+				else
+				{
+					System.out.println("No data for " + c.getTime());
 				}
 			}
 			
@@ -46,25 +50,9 @@ public class PredictionDriver
 			
 			System.out.println("Average deviation: " + Utility.average(deviations));
 			System.out.println("Median deviation: " + median(deviations));
-			System.out.println("Max deviation: " + max(deviations));
+			System.out.println("Max deviation: " + Utility.max(deviations));
+			System.out.println("Min deviation: " + Utility.min(deviations));
 		}
-	}
-	
-	public static Double max(List<Double> list)
-	{
-		double max = Integer.MIN_VALUE;
-		Iterator<Double> it = list.iterator();
-		
-		while (it.hasNext())
-		{
-			Double i = it.next();
-			if (i > max)
-			{
-				max = i + 0.0;
-			}
-		}
-		
-		return (max != Integer.MIN_VALUE) ? max : null;
 	}
 	
 	public static Double quartile(List<Double> list, Integer quartile)
