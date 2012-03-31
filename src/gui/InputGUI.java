@@ -79,7 +79,8 @@ public class InputGUI implements InputAnalyser {
 	}
 
 	private void setup() {
-
+		JOptionPane.showMessageDialog(frame,
+			    "Please select the location of the occupancy data.");
 		mainPanel.setLayout(null);
 		Container contentPane = frame.getContentPane();
 		contentPane.setLayout(null);
@@ -140,15 +141,19 @@ public class InputGUI implements InputAnalyser {
 		dataTypeLabel.setBounds(10, 103, 110, 15);
 		graphType.add(rawButton);
 		graphType.add(analysedButton);
+		graphType.add(predictButton);
 		analysedButton.setSelected(true);
 
 		rawButton.addActionListener(new ModeListener(this));
 		analysedButton.addActionListener(new ModeListener(this));
+		predictButton.addActionListener(new ModeListener(this));
 		
 		mainPanel.add(rawButton);
 		rawButton.setBounds(125, 104, 50, 15);
 		mainPanel.add(analysedButton);
 		analysedButton.setBounds(175, 104, 100, 15);
+		mainPanel.add(predictButton);
+		predictButton.setBounds(275, 104, 100, 15);
 
 		mainPanel.add(seriesLabel);
 		seriesLabel.setBounds(10, 119, 115, 15);
@@ -223,7 +228,7 @@ public class InputGUI implements InputAnalyser {
 
 	public static void main(String[] args) {
 		InputGUI gui = new InputGUI();
-
+		
 		gui.addParser(new DSParserFactory());
 		// gui.addParser(new CISParserFactory());
 		gui.setup();
@@ -262,8 +267,10 @@ public class InputGUI implements InputAnalyser {
 	public int getGraphType(){
 		if(rawButton.isSelected()){
 			return 1;
+		}if(analysedButton.isSelected()){
+			return 2;
 		}
-		else return 2;
+		 return 3;
 	}
 
 	public void datesWrongOrder() {
@@ -347,6 +354,7 @@ public class InputGUI implements InputAnalyser {
 		return aPowerButton.isSelected();
 	}
 	public void showAnalyser(){
+		System.out.println("showing an");
 		analysisDataLabel.setVisible(true);
 		aPowerButton.setVisible(true);
 		aOccupancyButton.setVisible(true);
@@ -358,8 +366,14 @@ public class InputGUI implements InputAnalyser {
 		
 		selectDurationLabel.setVisible(true);
 		durationComboBox.setVisible(true);
+		
+		startHourComboBox.setVisible(true);
+		startMinuteComboBox.setVisible(true);
+		endHourComboBox.setVisible(true);
+		endMinuteComboBox.setVisible(true);
 	}
 	public void showGrapher(){
+		System.out.println("showing graph");
 		analysisDataLabel.setVisible(false);
 		aPowerButton.setVisible(false);
 		aOccupancyButton.setVisible(false);
@@ -371,9 +385,30 @@ public class InputGUI implements InputAnalyser {
 		
 		selectDurationLabel.setVisible(false);
 		durationComboBox.setVisible(false);
+		
+		startHourComboBox.setVisible(true);
+		startMinuteComboBox.setVisible(true);
+		endHourComboBox.setVisible(true);
+		endMinuteComboBox.setVisible(true);
 	}
 	
 	public void showPredicter(){
+		System.out.println("showing pred");
+		analysisDataLabel.setVisible(false);
+		aPowerButton.setVisible(false);
+		aOccupancyButton.setVisible(false);
 		
+		seriesLabel.setVisible(false);
+		cOButton.setVisible(false);
+		splitButton.setVisible(false);
+		powerButton.setVisible(false);
+		
+		selectDurationLabel.setVisible(false);
+		durationComboBox.setVisible(false);
+		
+		startHourComboBox.setVisible(false);
+		startMinuteComboBox.setVisible(false);
+		endHourComboBox.setVisible(false);
+		endMinuteComboBox.setVisible(false);
 	}
 }

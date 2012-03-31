@@ -15,9 +15,10 @@ public class ModeListener implements ActionListener{
 		int type = input.getGraphType();
 		if(type ==1){
 			input.showGrapher();
-		}
-		if(type ==2){
+		}else if(type ==2){
 			input.showAnalyser();
+		}else{
+			input.showPredicter();
 		}
 	}
 

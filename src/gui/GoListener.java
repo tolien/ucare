@@ -19,6 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
 import parser.DataSource;
+import prediction.PredictionOutput;
 
 public class GoListener implements ActionListener, Observer {
 
@@ -86,11 +87,13 @@ public class GoListener implements ActionListener, Observer {
 				graphTool = Grapher.getInstance();
 				Grapher.getInstance().setDataSource(source);
 				Grapher.getInstance().setRequestedData(labs, startDate, endDate,input.getAxis2Type());
-			}else{
+			}else if(input.getGraphType()==2){
 				graphTool = AnalysisGrapher.getInstance();
 				AnalysisGrapher.getInstance().setDataSource(source);
 				AnalysisGrapher.getInstance().setRequestedData(labs, startDate, endDate, 
 						input.getIntervalTime(), input.getIntervalName(), input.getADataType());
+			}else{
+				graphTool = new PredictionOutput(labs.get(0), startDate, endDate, source);
 			}
 			
 			new GraphGUI(graphTool.getGraph(1024,GRAPH_HEIGHT - 1));
