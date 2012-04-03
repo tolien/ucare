@@ -54,7 +54,7 @@ private int capacity;
 		int row = 0;
 		while(!c.getTime().after(end)){
 			//for 8-6
-			daysValues[row][0]=c.get(Calendar.DATE)+"/"+c.get(Calendar.MONTH)+"/"+c.get(Calendar.YEAR);
+			daysValues[row][0]=c.get(Calendar.DATE)+"/"+ (c.get(Calendar.MONTH) + 1) +"/"+c.get(Calendar.YEAR);
 			for (int i=1; i<12;i++){
 				daysValues[row][i]=Math.round(predictor.getProbability(c.getTime())*capacity*10);
 				System.out.println(predictor.getProbability(c.getTime()));;
