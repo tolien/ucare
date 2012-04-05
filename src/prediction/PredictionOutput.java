@@ -56,7 +56,7 @@ private int capacity;
 			//for 8-6
 			daysValues[row][0]=c.get(Calendar.DATE)+"/"+ (c.get(Calendar.MONTH) + 1) +"/"+c.get(Calendar.YEAR);
 			for (int i=1; i<12;i++){
-				long estimation = Math.round(predictor.getProbability(c.getTime())*capacity*10);
+				long estimation = Math.round(predictor.getProbability(c.getTime())*capacity);
 				if (estimation>capacity) estimation = capacity;
 				daysValues[row][i]=estimation;
 				System.out.println(predictor.getProbability(c.getTime()));;
