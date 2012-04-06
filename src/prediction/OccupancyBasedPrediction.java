@@ -46,7 +46,7 @@ public class OccupancyBasedPrediction implements Predictor
 			}
 		}
 		
-		System.out.println(d + "\t" + analyses + " avg fac: " + averageFactor(factors) + " average of closest two: " + Utility.average(closestTwo(factors)));
+		//System.out.println(d + "\t" + analyses + " avg fac: " + averageFactor(factors) + " average of closest two: " + Utility.average(closestTwo(factors)));
 		double probability = weightFactors(factors);
 		probability = probability > 1 ? 1 : probability;
 		return probability;
@@ -56,11 +56,21 @@ public class OccupancyBasedPrediction implements Predictor
 	{
 		if ((Utility.max(factors) / Utility.min(factors)) >= 7.5)
 		{
+			//System.out.println("Ratio");
 			return Utility.min(factors);
 		}
-		else if (averageFactor(factors) < 1.75)
+		else if ((averageFactor(factors) < 2) && Utility.max(factors) > 0.25)
 		{
+			//System.out.println("Closeness");
 			return Utility.sum(factors);
+		}
+		else if (averageFactor(closestTwo(factors)) <= 1)
+		{
+			//System.out.println("Two very close together");
+			List<Double> l = new ArrayList<Double>();
+			l.add(Utility.max(factors));
+			l.add(Utility.max(closestTwo(factors)));
+			return Utility.sum(l);
 		}
 		else
 		{
