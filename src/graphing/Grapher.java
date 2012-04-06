@@ -103,7 +103,7 @@ public class Grapher implements GraphTool, ImageGenerator {
 		TreeSet<Date> keys = new TreeSet<Date>(labData.keySet());
 		int count = labData.get(keys.first()).size();
 		for (int i = 0; i < count; i++) {
-			TimeSeries s1 = new TimeSeries(labName+namePostfix+" unit "+i+1);
+			TimeSeries s1 = new TimeSeries(labName+namePostfix+" unit "+(i+1));
 			for (Date key : keys) {
 				if (key.compareTo(start) >= 0 && key.compareTo(end) <= 0)
 					s1.add(new Minute(key), labData.get(key).get(i)*multiplier);
