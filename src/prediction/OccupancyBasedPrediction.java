@@ -46,7 +46,7 @@ public class OccupancyBasedPrediction implements Predictor
 			}
 		}
 		
-		System.out.println(d + "\t" + analyses);
+		System.out.println(d + "\t" + analyses + " avg fac: " + averageFactor(factors) + " average of closest two: " + Utility.average(closestTwo(factors)));
 		double probability = weightFactors(factors);
 		probability = probability > 1 ? 1 : probability;
 		return probability;
@@ -54,11 +54,11 @@ public class OccupancyBasedPrediction implements Predictor
 	
 	private double weightFactors(List<Double> factors)
 	{
-		if ((Utility.max(factors) / Utility.min(factors)) >= 5)
+		if ((Utility.max(factors) / Utility.min(factors)) >= 7.5)
 		{
 			return Utility.min(factors);
 		}
-		else if (averageFactor(factors) < 1.5)
+		else if (averageFactor(factors) < 1.75)
 		{
 			return Utility.sum(factors);
 		}
