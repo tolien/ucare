@@ -59,7 +59,7 @@ public class OccupancyBasedPrediction implements Predictor
 			//System.out.println("Ratio");
 			return Utility.min(factors);
 		}
-		else if ((averageFactor(factors) < 2) && Utility.max(factors) > 0.25)
+		else if ((averageFactor(factors) < 1.8) && Utility.max(factors) > 0.25)
 		{
 			//System.out.println("Closeness");
 			return Utility.sum(factors);
