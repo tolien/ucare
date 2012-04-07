@@ -64,7 +64,7 @@ public class OccupancyBasedPrediction implements Predictor
 			//System.out.println("Closeness");
 			return Utility.sum(factors);
 		}
-		else if (averageFactor(closestTwo(factors)) <= 1)
+		else if (averageFactor(closestTwo(factors)) == 1)
 		{
 			//System.out.println("Two very close together");
 			List<Double> l = new ArrayList<Double>();
