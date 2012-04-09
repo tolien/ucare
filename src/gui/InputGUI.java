@@ -359,7 +359,6 @@ public class InputGUI implements InputAnalyser {
 		return aPowerButton.isSelected();
 	}
 	public void showAnalyser(){
-		System.out.println("showing an");
 		analysisDataLabel.setVisible(true);
 		aPowerButton.setVisible(true);
 		aOccupancyButton.setVisible(true);
@@ -381,7 +380,6 @@ public class InputGUI implements InputAnalyser {
 	}
 	
 	public void showGrapher(){
-		System.out.println("showing graph");
 		analysisDataLabel.setVisible(false);
 		aPowerButton.setVisible(false);
 		aOccupancyButton.setVisible(false);
@@ -403,7 +401,6 @@ public class InputGUI implements InputAnalyser {
 	}
 	
 	public void showPredicter(){
-		System.out.println("showing pred");
 		analysisDataLabel.setVisible(false);
 		aPowerButton.setVisible(false);
 		aOccupancyButton.setVisible(false);

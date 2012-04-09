@@ -59,12 +59,10 @@ private int capacity;
 				long estimation = Math.round(predictor.getProbability(c.getTime())*capacity);
 				if (estimation>capacity) estimation = capacity;
 				daysValues[row][i]=estimation;
-				System.out.println(predictor.getProbability(c.getTime()));;
 				c.add(Calendar.HOUR, 1);
 			}
 			row++;
 			c.add(Calendar.HOUR, 14);
-			System.out.println(c.get(Calendar.MINUTE)+" "+c.get(Calendar.HOUR_OF_DAY)+"  "+c.get(Calendar.DATE)+" "+c.get(Calendar.MONTH)+"\n\n");
 
 		}
 		String[] headings = {"Date", "8","9","10","11","12","1","2","3","4","5","6"};
