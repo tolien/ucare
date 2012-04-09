@@ -127,7 +127,7 @@ public abstract class Analyser implements DataAnalyser
 
 	protected Double summarisationStep(List<Double> data)
 	{
-		return quartile(data, 3);
+		return median(data);
 	}
 	
 	private Double[] fillBoxplot(List<Double> list)
