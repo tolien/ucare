@@ -62,7 +62,7 @@ private int capacity;
 				c.add(Calendar.HOUR, 1);
 			}
 			row++;
-			c.add(Calendar.HOUR, 14);
+			c.add(Calendar.HOUR, 13);
 
 		}
 		String[] headings = {"Date", "8","9","10","11","12","1","2","3","4","5","6"};
