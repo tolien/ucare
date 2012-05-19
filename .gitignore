@@ -1,0 +1,8 @@
+syntax: glob
+.DS_Store
+data
+.hg*
+bin/*
+build
+parser.jar
+run.bat
