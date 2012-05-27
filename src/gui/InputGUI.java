@@ -1,6 +1,8 @@
 package gui;
 
 import java.awt.Container;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -34,7 +36,7 @@ public class InputGUI implements InputAnalyser {
 
 	private JFrame frame = new JFrame("Lab Occupancy Analyser");
 
-	private JPanel mainPanel = new JPanel();
+	private JPanel mainPanel = new JPanel(new GridBagLayout());
 
 	private JLabel selectLabLabel = new JLabel("Select lab:");
 	private JComboBox labComboBox;
@@ -83,11 +85,8 @@ public class InputGUI implements InputAnalyser {
 	private void setup() {
 		JOptionPane.showMessageDialog(frame,
 			    "Please select the location of the occupancy data.");
-		mainPanel.setLayout(null);
 		Container contentPane = frame.getContentPane();
-		contentPane.setLayout(null);
 		contentPane.add(mainPanel);
-		mainPanel.setBounds(0, 0, 400, 700);
 
 		selectFileType();
 
@@ -96,10 +95,8 @@ public class InputGUI implements InputAnalyser {
 
 			if (folderSelected) {
 				setupGUI();
-
-				frame.setLocation(4, 4);
-				frame.setSize(450, 250);
-				frame.setResizable(false);
+				
+				frame.pack();
 				frame.setVisible(true);
 				frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			} else {
@@ -111,97 +108,150 @@ public class InputGUI implements InputAnalyser {
 	}
 
 	private void setupGUI() {
-		mainPanel.add(selectLabLabel);
-		selectLabLabel.setBounds(10, 20, 100, 10);
-		labComboBox = new JComboBox(getLabNames());
-		mainPanel.add(labComboBox);
-		labComboBox.setBounds(120, 15, 230, 20);
-
-		mainPanel.add(startDateLabel);
-		startDateLabel.setBounds(10, 50, 100, 10);
-		mainPanel.add(startDateField);
-		startDateField.setBounds(120, 45, 100, 20);
-		startHourComboBox = new JComboBox(getHours());
-		mainPanel.add(startHourComboBox);
-		startHourComboBox.setBounds(230, 45, 40, 20);
-		startMinuteComboBox = new JComboBox(getMinutes());
-		mainPanel.add(startMinuteComboBox);
-		startMinuteComboBox.setBounds(280, 45, 40, 20);
-
-		mainPanel.add(endDateLabel);
-		endDateLabel.setBounds(10, 78, 100, 10);
-		mainPanel.add(endDateField);
-		endDateField.setBounds(120, 73, 100, 20);
-		endHourComboBox = new JComboBox(getHours());
-		mainPanel.add(endHourComboBox);
-		endHourComboBox.setBounds(230, 73, 40, 20);
-		endMinuteComboBox = new JComboBox(getMinutes());
-		mainPanel.add(endMinuteComboBox);
-		endMinuteComboBox.setBounds(280, 73, 40, 20);
+		GridBagConstraints c = new GridBagConstraints();
+		c.gridx = 0;
+		c.gridy = 0;
+		c.anchor = GridBagConstraints.LINE_START;
+		mainPanel.add(selectLabLabel, c);
+		selectLabLabel.setLabelFor(labComboBox);
 		
-		mainPanel.add(dataTypeLabel);
-		dataTypeLabel.setBounds(10, 103, 110, 15);
+		c = new GridBagConstraints();
+		c.gridx = 1;
+		c.gridy = 0;
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		labComboBox = new JComboBox(getLabNames());
+		mainPanel.add(labComboBox, c);
+
+		
+		c = new GridBagConstraints();
+		c.gridx = 0;
+		c.gridy = 1;
+		c.anchor = GridBagConstraints.LINE_START;
+		mainPanel.add(startDateLabel, c);
+		
+		c = new GridBagConstraints();
+		c.gridx = 1;
+		c.gridy = 1;
+		c.ipadx = 10;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		mainPanel.add(startDateField, c);
+		
+		c = new GridBagConstraints();
+		c.gridx = 2;
+		c.gridy = 1;
+		startHourComboBox = new JComboBox(getHours());
+		mainPanel.add(startHourComboBox, c);
+		
+		c = new GridBagConstraints();
+		c.gridx = 3;
+		c.gridy = 1;
+		startMinuteComboBox = new JComboBox(getMinutes());
+		mainPanel.add(startMinuteComboBox, c);
+
+		
+		c = new GridBagConstraints();
+		c.gridx = 0;
+		c.gridy = 2;
+		c.anchor = GridBagConstraints.LINE_START;
+		mainPanel.add(endDateLabel, c);
+		
+		c = new GridBagConstraints();
+		c.gridy = 2;
+		c.gridx = 1;
+		c.ipadx = 10;
+		mainPanel.add(endDateField, c);
+		
+		c.ipadx = 0;
+		c.gridx = 2;
+		endHourComboBox = new JComboBox(getHours());
+		mainPanel.add(endHourComboBox, c);
+		
+		c.gridx = 3;
+		endMinuteComboBox = new JComboBox(getMinutes());
+		mainPanel.add(endMinuteComboBox, c);
+
+		c = new GridBagConstraints();
+		c.gridx = 0;
+		c.gridy = 3;
+		c.anchor = GridBagConstraints.LINE_START;
+		mainPanel.add(dataTypeLabel, c);
+		
 		graphType.add(rawButton);
 		graphType.add(analysedButton);
 		graphType.add(predictButton);
-		analysedButton.setSelected(true);
+		rawButton.setSelected(true);
 
 		rawButton.addActionListener(new ModeListener(this));
 		analysedButton.addActionListener(new ModeListener(this));
 		predictButton.addActionListener(new ModeListener(this));
 		
-		mainPanel.add(rawButton);
-		rawButton.setBounds(125, 104, 50, 15);
-		mainPanel.add(analysedButton);
-		analysedButton.setBounds(175, 104, 100, 15);
-		mainPanel.add(predictButton);
-		predictButton.setBounds(275, 104, 100, 15);
+		c.gridx = 1;
+		mainPanel.add(rawButton, c);
+		
+		c.gridx = 2;
+		mainPanel.add(analysedButton, c);
+		
+		c.gridx = 3;
+		mainPanel.add(predictButton, c);
 
-		mainPanel.add(seriesLabel);
-		seriesLabel.setBounds(10, 119, 115, 15);
+		c = new GridBagConstraints();
+		c.gridx = 0;
+		c.gridy = 4;
+		c.anchor = GridBagConstraints.LINE_START;
+		mainPanel.add(seriesLabel, c);
 		seriesType.add(cOButton);
 		seriesType.add(splitButton);
 		seriesType.add(powerButton);
 		powerButton.setSelected(true);
 		
-		mainPanel.add(cOButton);
-		cOButton.setBounds(125, 119, 50, 15);
-		mainPanel.add(splitButton);
-		splitButton.setBounds(175, 119, 90, 15);
-		mainPanel.add(powerButton);
-		powerButton.setBounds(265, 119, 105, 15);
+		c.gridx = 1;
+		mainPanel.add(cOButton, c);
+		c.gridx = 2;
+		mainPanel.add(splitButton, c);
+		c.gridx = 3;
+		mainPanel.add(powerButton, c);
 		
-		mainPanel.add(analysisDataLabel);
-		analysisDataLabel.setBounds(10, 133, 110, 15);
+		c = new GridBagConstraints();
+		c.gridx = 0;
+		c.gridy = 5;
+		c.anchor = GridBagConstraints.LINE_START;
+
+		mainPanel.add(analysisDataLabel, c);
 		analysisData.add(aOccupancyButton);
 		analysisData.add(aPowerButton);
 		aOccupancyButton.setSelected(true);
 		
-		mainPanel.add(aOccupancyButton);
-		aOccupancyButton.setBounds(125, 133, 100, 15);
-		mainPanel.add(aPowerButton);
-		aPowerButton.setBounds(225, 133, 70, 15);
-		mainPanel.add(dropHoursCheck);
-		dropHoursCheck.setBounds(295, 133, 100, 15);
+		c.gridx = 1;
+		mainPanel.add(aOccupancyButton, c);
+		c.gridx = 2;
+		mainPanel.add(aPowerButton, c);
+		c.gridx = 3;
+		mainPanel.add(dropHoursCheck, c);
 		
-		mainPanel.add(selectDurationLabel);
-		selectDurationLabel.setBounds(10, 148, 160, 20);
-		String[] periods = {"Hours", "Half-Day", "Day", "Week", "Month", "Quarter", "Year"};
+		
+		c = new GridBagConstraints();
+		c.gridy = 6;
+		c.gridx = 0;
+		c.anchor = GridBagConstraints.LINE_START;
+		mainPanel.add(selectDurationLabel, c);
+		final String[] periods = {"Hours", "Half-Day", "Day", "Week", "Month", "Quarter", "Year"};
 		durationComboBox = new JComboBox(periods);
-		mainPanel.add(durationComboBox);
-		durationComboBox.setBounds(170, 148, 230, 20);
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		c.anchor = GridBagConstraints.CENTER;
+		mainPanel.add(durationComboBox, c);
 		
-		
-		
-		mainPanel.add(goButton);
-		goButton.setBounds(120, 168, 50, 30);
+		c = new GridBagConstraints();
+		c.gridx = 1;
+		c.gridy = 9;	
+		mainPanel.add(goButton, c);
 		goButton.addActionListener(new GoListener(this));
+		
 		showAnalyser();
 	}
 
 	private String[] getLabNames() {
-		List<String> names = parser.getLabList();
-		names = Utility.asSortedList(names);
+		final List<String> names = Utility.asSortedList(parser.getLabList());
 		
 		return names.toArray(new String[0]);
 	}
