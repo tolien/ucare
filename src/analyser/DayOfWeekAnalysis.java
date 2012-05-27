@@ -18,7 +18,9 @@ public class DayOfWeekAnalysis extends Analyser
 	@Override
 	protected boolean selectData(Date d)
 	{
-		return (d.getHours() >= 9 && d.getHours() <= 17);
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(d);
+		return (cal.get(Calendar.HOUR_OF_DAY) >= 9 && cal.get(Calendar.HOUR_OF_DAY) <= 17);
 	}
 
 	@Override
