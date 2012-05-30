@@ -2,7 +2,7 @@ package analyser;
 
 import java.util.*;
 
-import occupancy.Utility;
+import ucare.Utility;
 
 public abstract class Analyser implements DataAnalyser
 {

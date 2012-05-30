@@ -16,7 +16,7 @@ import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import occupancy.Utility;
+import ucare.Utility;
 
 public class Parser extends Observable implements DataSource
 {

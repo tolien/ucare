@@ -7,7 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import occupancy.Utility;
+import ucare.Utility;
 
 public class MonthOfYearAnalysis extends Analyser
 {

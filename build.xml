@@ -41,7 +41,7 @@
     
     <target name="build" depends="compile">
     	<antcall target="create_jar">
-    		<param name="main" value="gui.InputGUI" />
+    		<param name="main" value="ucare.UCARE" />
     		<param name="out.file" value="parser" />
     	</antcall>
     </target>

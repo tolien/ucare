@@ -20,12 +20,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
-import occupancy.Utility;
 
 import parser.DSParserFactory;
 import parser.DataSource;
 import parser.Parser;
 import parser.ParserFactory;
+import ucare.Utility;
 
 import net.sf.nachocalendar.CalendarFactory;
 import net.sf.nachocalendar.components.DateField;

@@ -2,7 +2,7 @@ package prediction;
 
 import java.util.*;
 
-import occupancy.Utility;
+import ucare.Utility;
 
 
 import analyser.DataAnalyser;
