@@ -4,6 +4,6 @@ data
 .hg*
 bin/*
 build
-parser.jar
+*.jar
 run.bat
 reports
