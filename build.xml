@@ -3,6 +3,7 @@
     <property name="src.dir" value="src" />
     <property name="bin.dir" value="build" />
     <property name="lib.dir" value="lib" />
+    <property name="doc.dir" value="doc" />
     
     <path id="classpath">
     	<fileset dir="${lib.dir}" includes="*.jar" />
@@ -34,12 +35,13 @@
     
     <target name="clean">
     	<delete dir="${bin.dir}" />
+    	<delete dir="${doc.dir}" />
 	<delete>
 		<fileset dir="." includes="*.jar" />
 	</delete>
     </target>
     
-    <target name="build" depends="compile">
+    <target name="build" depends="compile, doc">
     	<antcall target="create_jar">
     		<param name="main" value="ucare.UCARE" />
     		<param name="out.file" value="ucare" />
@@ -51,5 +53,22 @@
     		<param name="main" value="occupancy.PredictionDriver" />
     		<param name="out.file" value="stats" />
     	</antcall>
+    </target>
+    
+    <target name="doc" depends="clean">
+    	<javadoc
+    		additionalparam="-quiet"
+    		access="public"
+    		destdir="${doc.dir}" >
+    		
+    		<classpath>
+    			<fileset dir="${lib.dir}">
+    				<include name="*.jar" />
+    			</fileset>
+    		</classpath>
+	    	<fileset dir="${src.dir}" defaultexcludes="yes">
+    			<include name="**/*.java" />
+    		</fileset>
+    	</javadoc>
     </target>
 </project>
