@@ -82,7 +82,7 @@ public class InputGUI implements InputAnalyser {
 		factories.add(pf);
 	}
 
-	private void setup() {
+	public void setup() {
 		JOptionPane.showMessageDialog(frame,
 			    "Please select the location of the occupancy data.");
 		Container contentPane = frame.getContentPane();
@@ -279,14 +279,6 @@ public class InputGUI implements InputAnalyser {
 			}
 		}
 		return minutes.toArray(new String[minutes.size()]);
-	}
-
-	public static void main(String[] args) {
-		InputGUI gui = new InputGUI();
-		
-		gui.addParser(new DSParserFactory());
-		// gui.addParser(new CISParserFactory());
-		gui.setup();
 	}
 
 	public String getLab() {
