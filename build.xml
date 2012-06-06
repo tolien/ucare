@@ -61,6 +61,8 @@
     		access="public"
     		destdir="${doc.dir}" >
     		
+    		<link href="http://docs.oracle.com/javase/6/docs/api/"/>
+    		    
     		<classpath>
     			<fileset dir="${lib.dir}">
     				<include name="*.jar" />
