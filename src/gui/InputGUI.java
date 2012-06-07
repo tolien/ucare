@@ -19,6 +19,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 
 
 import parser.DSParserFactory;
@@ -108,6 +110,8 @@ public class InputGUI implements InputAnalyser {
 	}
 
 	private void setupGUI() {
+		Border margin = new EmptyBorder(10, 15, 0, 15);
+		mainPanel.setBorder(margin);
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 0;
 		c.gridy = 0;
