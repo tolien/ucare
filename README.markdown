@@ -1,5 +1,9 @@
-U-CARE Data Parser
-==================
+ECO-APT: Energy Consumption and Occupancy - Analysis and Planning Tool
+=====================================================================
+
+Developed as part of the University of Strathclyde's U-CARE
+(Universities' Collaborative Approach to Reducing Energy),
+a JISC Greening ICT project.
 
 Usage
 -----
