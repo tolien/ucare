@@ -33,6 +33,15 @@ import net.sf.nachocalendar.CalendarFactory;
 import net.sf.nachocalendar.components.DateField;
 
 public class InputGUI implements InputAnalyser {
+	
+	public static final int RAW_MODE = 1;
+	public static final int ANALYSIS_MODE = 2;
+	public static final int PREDICTION_MODE = 3;
+	
+	public static final int TOTAL_POWER = 1;
+	public static final int SPLIT_POWER = 2;
+	public static final int CO2 = 3;
+	public static final int TEMPERATURE = 4;
 
 	private static final int MINUTE_INTERVAL = 4;
 
@@ -69,6 +78,7 @@ public class InputGUI implements InputAnalyser {
 	private JRadioButton cOButton = new JRadioButton("CO2");
 	private JRadioButton splitButton = new JRadioButton("Split Power");
 	private JRadioButton powerButton = new JRadioButton("Total Power");
+	private JRadioButton tempButton = new JRadioButton("Room Temperature");
 	
 	private JLabel selectDurationLabel = new JLabel("Select Analysis Granularity:");
 	private JComboBox durationComboBox;
@@ -207,6 +217,7 @@ public class InputGUI implements InputAnalyser {
 		seriesType.add(cOButton);
 		seriesType.add(splitButton);
 		seriesType.add(powerButton);
+		seriesType.add(tempButton);
 		powerButton.setSelected(true);
 		
 		c.gridx = 1;
@@ -215,6 +226,8 @@ public class InputGUI implements InputAnalyser {
 		mainPanel.add(splitButton, c);
 		c.gridx = 3;
 		mainPanel.add(powerButton, c);
+		c.gridx = 4;
+		mainPanel.add(tempButton, c);
 		
 		c = new GridBagConstraints();
 		c.gridx = 0;
@@ -251,7 +264,7 @@ public class InputGUI implements InputAnalyser {
 		mainPanel.add(goButton, c);
 		goButton.addActionListener(new GoListener(this));
 		
-		showAnalyser();
+		showGrapher();
 	}
 
 	private String[] getLabNames() {
@@ -317,9 +330,9 @@ public class InputGUI implements InputAnalyser {
 	
 	public int getGraphType(){
 		if(rawButton.isSelected()){
-			return 1;
+			return RAW_MODE;
 		}if(analysedButton.isSelected()){
-			return 2;
+			return ANALYSIS_MODE;
 		}
 		 return 3;
 	}
@@ -386,9 +399,10 @@ public class InputGUI implements InputAnalyser {
 	public int getAxis2Type() {
 		
 			if(powerButton.isSelected()){
-				return 1;
-			}else if (splitButton.isSelected()){return 2;}
-			else{return 3;}
+				return TOTAL_POWER;
+			}else if (splitButton.isSelected()){return SPLIT_POWER;}
+			else if (cOButton.isSelected()){return CO2;}
+			else {return TEMPERATURE;}
 		
 	}
 	
@@ -413,6 +427,7 @@ public class InputGUI implements InputAnalyser {
 		cOButton.setVisible(false);
 		splitButton.setVisible(false);
 		powerButton.setVisible(false);
+		tempButton.setVisible(false);
 		
 		selectDurationLabel.setVisible(true);
 		durationComboBox.setVisible(true);
@@ -434,6 +449,7 @@ public class InputGUI implements InputAnalyser {
 		cOButton.setVisible(true);
 		splitButton.setVisible(true);
 		powerButton.setVisible(true);
+		tempButton.setVisible(true);
 		
 		selectDurationLabel.setVisible(false);
 		durationComboBox.setVisible(false);
@@ -455,6 +471,7 @@ public class InputGUI implements InputAnalyser {
 		cOButton.setVisible(false);
 		splitButton.setVisible(false);
 		powerButton.setVisible(false);
+		tempButton.setVisible(false);
 		
 		selectDurationLabel.setVisible(false);
 		durationComboBox.setVisible(false);

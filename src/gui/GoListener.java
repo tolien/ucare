@@ -78,20 +78,20 @@ public class GoListener implements ActionListener, Observer {
 			String lab = input.getLab();
 			List<String> labs = new ArrayList<String>();
 			labs.add(lab);
-			ImageGenerator graphTool;
-			if (input.getGraphType() == 1) {
+			ImageGenerator graphTool = null;
+			if (input.getGraphType() == InputGUI.RAW_MODE) {
 				graphTool = Grapher.getInstance();
 				Grapher.getInstance().setDataSource(source);
 				Grapher.getInstance().setRequestedData(labs, startDate,
 						endDate, input.getAxis2Type());
-			} else if (input.getGraphType() == 2) {
+			} else if (input.getGraphType() == InputGUI.ANALYSIS_MODE) {
 				graphTool = AnalysisGrapher.getInstance();
 				AnalysisGrapher.getInstance().setDataSource(source);
 				AnalysisGrapher.getInstance().setRequestedData(labs, startDate,
 						endDate, input.getIntervalTime(),
 						input.getIntervalName(), input.getADataType(),
 						input.getLimitData());
-			} else {
+			} else if (input.getGraphType() == InputGUI.PREDICTION_MODE) {
 				graphTool = new PredictionOutput(labs.get(0), startDate,
 						endDate, source);
 			}
