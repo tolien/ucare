@@ -8,3 +8,4 @@ build
 run.bat
 reports
 doc/*
+test-data
