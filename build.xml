@@ -73,4 +73,19 @@
     		</fileset>
     	</javadoc>
     </target>
+    
+    <target name="test" depends="compile">
+		<junit>
+			<formatter type="plain" usefile="false" />
+			<classpath>
+				<pathelement location="${bin.dir}" />
+		    	<fileset dir="${lib.dir}" includes="*.jar" />
+			</classpath>
+			<batchtest>
+				<fileset dir="${src.dir}">
+					<include name="**/*Test*.java" />
+				</fileset>
+			</batchtest>
+		</junit>
+    </target>
 </project>
