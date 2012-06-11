@@ -74,7 +74,7 @@
     	</javadoc>
     </target>
     
-    <target name="test" depends="compile">
+    <target name="test" depends="build">
 		<junit>
 			<formatter type="plain" usefile="false" />
 			<classpath>
