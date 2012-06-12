@@ -75,7 +75,7 @@
     </target>
     
     <target name="test" depends="build">
-		<junit>
+		<junit haltonfailure="true">
 			<formatter type="plain" usefile="false" />
 			<classpath>
 				<pathelement location="${bin.dir}" />
