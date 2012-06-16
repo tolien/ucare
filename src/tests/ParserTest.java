@@ -17,12 +17,18 @@ public class ParserTest
 {
 	private ParserFactory pf;
 	private final static String dir = "test-data/stats-log";
+	private final static String labName = "Hills-634";
+
 	private Calendar start = Calendar.getInstance();
 	private Calendar end = Calendar.getInstance();
 	private Parser parser;
 	
 	private Calendar futureStart = Calendar.getInstance();
 	private Calendar futureEnd = Calendar.getInstance();
+	
+	private Calendar pastStart = Calendar.getInstance();
+	private Calendar pastEnd = Calendar.getInstance();
+	String dudLab = "12345";
 	
 	@Before
 	public void setUp() throws Exception
@@ -67,6 +73,15 @@ public class ParserTest
 	}
 	
 	@Test
+	public void noOrOutOfRangeDates()
+	{
+		Map<Date, Double> noDate = parser.getAbsoluteOccupancy(labName, null, null);
+		Map<Date, Double> bigRange = parser.getAbsoluteOccupancy(labName, pastStart.getTime(), futureEnd.getTime());
+		
+		assertEquals(noDate.size(), bigRange.size());
+	}
+	
+	@Test
 	public void dateFilterNoStartDate()
 	{
 		Map<Date, Double> noStart = parser.getAbsoluteOccupancy("Hills-634", null, end.getTime());
@@ -90,9 +105,15 @@ public class ParserTest
 	}
 	
 	@Test
-	public void dateFilterNoAvailableData()
+	public void noAvailableData()
 	{
 		Map<Date, Double> noData = parser.getAbsoluteOccupancy("Hills-634", futureStart.getTime(), futureEnd.getTime());
+		assertTrue(noData.isEmpty());
+		
+		assertTrue(!parser.getLabList().contains(dudLab));
+		noData = parser.getAbsoluteOccupancy(dudLab, start.getTime(), end.getTime());
+		assertTrue(noData.isEmpty());
+		noData = parser.getAbsoluteOccupancy("", start.getTime(), end.getTime());
 		assertTrue(noData.isEmpty());
 	}
 

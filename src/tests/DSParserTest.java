@@ -17,12 +17,16 @@ import ucare.Utility;
 public class DSParserTest
 {
 	private final static File testFile = new File("test-data/stats-log/23-1-2012.txt");
+	private final static String labName = "Hills-634";
 	private Calendar start = Calendar.getInstance();
 	private Calendar end = Calendar.getInstance();
 	private Occupancy parser;
 	
 	private Calendar futureStart = Calendar.getInstance();
 	private Calendar futureEnd = Calendar.getInstance();
+	
+	private Calendar pastStart = Calendar.getInstance();
+	private Calendar pastEnd = Calendar.getInstance();
 	
 	@Before
 	public void setUp() throws Exception
@@ -42,6 +46,12 @@ public class DSParserTest
 		
 		//1 Dec 2050
 		futureEnd.set(2050, 11, 1);
+
+		//1 Jan 1950
+		pastStart.set(1950, 0, 1);
+		
+		//1 Dec 1950
+		pastEnd.set(1950, 11, 1);
 	}
 
 	@Test
@@ -54,7 +64,7 @@ public class DSParserTest
 	@Test
 	public void dateFilter()
 	{
-		Map<Date, Double> limited = parser.getAbsoluteOccupancy("Hills-634", start.getTime(), end.getTime());
+		Map<Date, Double> limited = parser.getAbsoluteOccupancy(labName, start.getTime(), end.getTime());
 		if (!limited.isEmpty())
 		{
 			List<Date> dates = Utility.asSortedList(limited.keySet());
@@ -67,9 +77,18 @@ public class DSParserTest
 	}
 	
 	@Test
+	public void noOrOutOfRangeDates()
+	{
+		Map<Date, Double> noDate = parser.getAbsoluteOccupancy(labName, null, null);
+		Map<Date, Double> bigRange = parser.getAbsoluteOccupancy(labName, pastStart.getTime(), futureEnd.getTime());
+		
+		assertEquals(noDate.size(), bigRange.size());
+	}
+	
+	@Test
 	public void dateFilterNoStartDate()
 	{
-		Map<Date, Double> noStart = parser.getAbsoluteOccupancy("Hills-634", null, end.getTime());
+		Map<Date, Double> noStart = parser.getAbsoluteOccupancy(labName, null, end.getTime());
 		if (!noStart.isEmpty())
 		{
 			List<Date> dates = Utility.asSortedList(noStart.keySet());
@@ -81,7 +100,7 @@ public class DSParserTest
 	public void dateFilterNoEndDate()
 	{
 		
-		Map<Date, Double> noEnd = parser.getAbsoluteOccupancy("Hills-634", start.getTime(), null);
+		Map<Date, Double> noEnd = parser.getAbsoluteOccupancy(labName, start.getTime(), null);
 		if (!noEnd.isEmpty())
 		{
 			List<Date> dates = Utility.asSortedList(noEnd.keySet());
@@ -92,7 +111,7 @@ public class DSParserTest
 	@Test
 	public void dateFilterNoAvailableData()
 	{
-		Map<Date, Double> noData = parser.getAbsoluteOccupancy("Hills-634", futureStart.getTime(), futureEnd.getTime());
+		Map<Date, Double> noData = parser.getAbsoluteOccupancy(labName, futureStart.getTime(), futureEnd.getTime());
 		assertTrue(noData.isEmpty());
 	}
 
