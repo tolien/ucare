@@ -16,12 +16,7 @@
                 <attribute name="Class-Path" value="."/>
             </manifest>
             <fileset dir="${bin.dir}"/>
-            <file file="LabNames.txt" />
-            <zipfileset excludes="META-INF/*.SF" src="lib/jcommon-1.0.17.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="lib/jfreechart-1.0.14.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="lib/nachocalendar-0.23.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="lib/nachocalendar-0.23-demo.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="lib/opencsv-2.3.jar"/>
+			<zipgroupfileset dir="${lib.dir}" includes="*.jar" excludes="META-INF/*.SF" />
         </jar>
     </target>
     
