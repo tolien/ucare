@@ -298,7 +298,7 @@ public class InputGUI implements InputAnalyser {
 		return minutes.toArray(new String[minutes.size()]);
 	}
 
-	public String getLab() {
+	public String getSelectedLab() {
 		return labComboBox.getSelectedItem().toString();
 	}
 

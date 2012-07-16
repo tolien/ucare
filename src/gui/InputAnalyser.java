@@ -6,7 +6,7 @@ import parser.DataSource;
 
 public interface InputAnalyser {
 	
-	public String getLab();
+	public String getSelectedLab();
 	
 	public Date getStartDate();
 	

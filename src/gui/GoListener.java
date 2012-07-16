@@ -75,7 +75,7 @@ public class GoListener implements ActionListener, Observer {
 			lock.lock();
 			Date startDate = input.getStartDate();
 			Date endDate = input.getEndDate();
-			String lab = input.getLab();
+			String lab = input.getSelectedLab();
 			List<String> labs = new ArrayList<String>();
 			labs.add(lab);
 			ImageGenerator graphTool = null;
