@@ -21,7 +21,7 @@ import org.jfree.ui.RectangleInsets;
 
 import parser.DataSource;
 
-public class Grapher implements GraphTool, ImageGenerator
+public final class Grapher implements GraphTool, ImageGenerator
 {
 	private static Grapher instance = null;
 	private TimeSeriesCollection occupancy = null;
@@ -101,7 +101,6 @@ public class Grapher implements GraphTool, ImageGenerator
 			if (key.compareTo(start) >= 0 && key.compareTo(end) <= 0)
 				s1.add(new Minute(key), labData.get(key) * multiplier);
 		}
-
 		dataset.addSeries(s1);
 
 	}
@@ -141,7 +140,7 @@ public class Grapher implements GraphTool, ImageGenerator
 			chartPanel.setPreferredSize(new java.awt.Dimension(xSize, ySize));
 			return chartPanel;
 		}
-		System.out.println("no data");
+		
 		return null;
 	}
 

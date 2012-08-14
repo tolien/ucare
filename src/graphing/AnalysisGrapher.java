@@ -22,7 +22,7 @@ import org.jfree.data.statistics.DefaultBoxAndWhiskerXYDataset;
 import parser.DataSource;
 
 
-public class AnalysisGrapher implements AnalysisGraphTool, ImageGenerator { 
+public final class AnalysisGrapher implements AnalysisGraphTool, ImageGenerator { 
 	
 	
 	private static AnalysisGrapher instance = null;
@@ -54,7 +54,6 @@ public class AnalysisGrapher implements AnalysisGraphTool, ImageGenerator {
 			chartPanel.setPreferredSize(new java.awt.Dimension(xSize, ySize));
 			return chartPanel;
 		 }
-		System.out.println("no data");
 		return null;
 	}
 
