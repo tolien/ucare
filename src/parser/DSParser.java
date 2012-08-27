@@ -17,18 +17,18 @@ import au.com.bytecode.opencsv.CSVReader;
 
 public class DSParser implements Occupancy
 {
-	public static int LAB_NAME = 0;
-	public static int USERS = 1;
-	public static int TOTAL_MACHINES = 2;
-	public static int DAY_NAME = 3;
-	public static int DATE = 4;
-	public static int TIME = 5;
+	public final static int LAB_NAME = 0;
+	public final static int USERS = 1;
+	public final static int TOTAL_MACHINES = 2;
+	public final static int DAY_NAME = 3;
+	public final static int DATE = 4;
+	public final static int TIME = 5;
 
-	private SimpleDateFormat dateFormatter = new SimpleDateFormat(
+	private final static SimpleDateFormat dateFormatter = new SimpleDateFormat(
 			"dd/MM/yyyy HH:mm:ss");
 
-	public Date maxTime;
-	public int max = 0;
+	private Date maxTime;
+	private int max = 0;
 	
 	private File f;
 	private FileReader fr;
@@ -70,10 +70,10 @@ public class DSParser implements Occupancy
 			existing.putAll(set.get(lab));
 
 			data.put(lab, existing);
-		while (set.size() > 0)
+		while (!set.isEmpty())
 		{
 			set = readSet();
-			if (set != null && set.size() > 0 && (set.get(lab) != null && set.get(lab).size() > 0))
+			if (set != null && set.size() > 0 && (set.get(lab) != null && !set.get(lab).isEmpty()))
 			{
 				existing = data.get(lab);
 				existing.putAll(set.get(lab));
@@ -163,11 +163,7 @@ public class DSParser implements Occupancy
 			 *  	and start is after the date or end is before the date
 			 *  then return null
 			 */
-			if ((start != null && d.compareTo(start) < 0) || (end != null && d.compareTo(end) > 0))
-			{
-				return null;
-			}
-			else
+			if ((start != null && d.compareTo(start) >= 0) && (end != null && d.compareTo(end) <= 0))
 			{
 				Double[] occupancy = labData.get(d);
 				result.put(d, occupancy[0]);
@@ -190,11 +186,7 @@ public class DSParser implements Occupancy
 		while (it.hasNext())
 		{
 			Date d = it.next();
-			if ((start != null && d.compareTo(start) < 0) || (end != null && d.compareTo(end) > 0))
-			{
-				return null;
-			}
-			else
+			if ((start != null && d.compareTo(start) >= 0) && (end != null && d.compareTo(end) <= 0))
 			{
 				Double[] occupancy = labData.get(d);
 				result.put(d, occupancy[1]);

@@ -5,8 +5,8 @@ import java.util.*;
 
 public class OccupancyFetcher implements Callable<Map<Date, Double>>
 {
-	private Occupancy occupancy;
-	private String lab;
+	final private Occupancy occupancy;
+	final private String lab;
 	private Date start = null;
 	private Date end = null;
 	private boolean isRelative = false;
@@ -33,14 +33,16 @@ public class OccupancyFetcher implements Callable<Map<Date, Double>>
 	@Override
 	public Map<Date, Double> call()
 	{
-		if (isRelative == false)
+		Map<Date, Double> result;
+		if (isRelative)
 		{
-			return occupancy.getAbsoluteOccupancy(lab, start, end);
+			result = occupancy.getRelativeOccupancy(lab, start, end);
 		}
 		else
 		{
-			return occupancy.getRelativeOccupancy(lab, start, end);
+			result = occupancy.getAbsoluteOccupancy(lab, start, end);
 		}
+		return result;
 	}
 
 }

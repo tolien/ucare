@@ -21,7 +21,6 @@ import ucare.Utility;
 public class Parser extends Observable implements DataSource
 {
 	private ExecutorService execService;
-	private CompletionService<Occupancy> ecs;
 	private CompletionService<Power> powerEcs;
 	private List<String> labs;
 	private Map<String, Integer> capacities;
@@ -51,7 +50,7 @@ public class Parser extends Observable implements DataSource
 	
 	public void read(String directory, ParserFactory factory)
 	{
-		ecs = new ExecutorCompletionService<Occupancy>(getExecutor());
+		CompletionService<Occupancy> ecs = new ExecutorCompletionService<Occupancy>(getExecutor());
 		try
 		{
 			File dir = new File(directory);
@@ -132,16 +131,14 @@ public class Parser extends Observable implements DataSource
 			try
 			{
 				occupancy = cs.take().get();
-				if (occupancy != null && occupancy.size() > 0)
+				if (occupancy != null && !occupancy.isEmpty())
 					result.putAll(occupancy);
 				
 			} catch (InterruptedException e)
 			{
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (ExecutionException e)
 			{
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -151,39 +148,41 @@ public class Parser extends Observable implements DataSource
 	
 	private Map<Date, Double> getRelativeOccupancy(String lab)
 	{
-		CompletionService<Map<Date, Double>> cs = new ExecutorCompletionService<Map<Date, Double>>(getExecutor());
 		Map<Date, Double> result = new HashMap<Date, Double>();
-		
-		Iterator<Occupancy> it = occupancyFiles.iterator();
-		while (it.hasNext())
+
+		if (!occupancyFiles.isEmpty())
 		{
-			OccupancyFetcher fetch = new OccupancyFetcher(it.next(), lab);
-			fetch.setRelative(true);
-			cs.submit(fetch);
-		}
-		
-		for (int i = 0; i < occupancyFiles.size(); i++)
-		{
-			Map<Date, Double> occupancy;
-			try
+			CompletionService<Map<Date, Double>> cs = new ExecutorCompletionService<Map<Date, Double>>(getExecutor());
+			
+			Iterator<Occupancy> it = occupancyFiles.iterator();
+			while (it.hasNext())
 			{
-				occupancy = cs.take().get();
-				if (occupancy != null && occupancy.size() > 0)
-					result.putAll(occupancy);
-				
-			} catch (InterruptedException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ExecutionException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				OccupancyFetcher fetch = new OccupancyFetcher(it.next(), lab);
+				fetch.setRelative(true);
+				cs.submit(fetch);
 			}
+			
+			for (int i = 0; i < occupancyFiles.size(); i++)
+			{
+				Map<Date, Double> occupancy;
+				try
+				{
+					occupancy = cs.take().get();
+					if (occupancy != null && !occupancy.isEmpty())
+						result.putAll(occupancy);
+					
+				} catch (InterruptedException e)
+				{
+					e.printStackTrace();
+				} catch (ExecutionException e)
+				{
+					e.printStackTrace();
+				}
+			}
+			
+			
+			execService.shutdown();
 		}
-		
-		
-		execService.shutdown();
 		
 		return result;
 	}
@@ -216,7 +215,7 @@ public class Parser extends Observable implements DataSource
 		{
 			Power p = powerIt.next();
 			Map<Date, List<Double>> power = p.getPower(start, end);
-			if (power != null && power.size() > 0)
+			if (power != null && !power.isEmpty())
 			{
 				result.putAll(power);
 			}
@@ -235,7 +234,7 @@ public class Parser extends Observable implements DataSource
 		{
 			Power p = powerIt.next();
 			Map<Date, Double> power = p.getTotalPower(start, end);
-			if (power != null && power.size() > 0)
+			if (power != null && !power.isEmpty())
 			{
 				result.putAll(power);
 			}
@@ -285,7 +284,7 @@ public class Parser extends Observable implements DataSource
 			try
 			{
 				occupancy = cs.take().get();
-				if (occupancy != null && occupancy.size() > 0)
+				if (occupancy != null && !occupancy.isEmpty())
 					result.putAll(occupancy);
 		
 				setChanged();
@@ -294,11 +293,9 @@ public class Parser extends Observable implements DataSource
 				
 			} catch (InterruptedException e)
 			{
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (ExecutionException e)
 			{
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -318,7 +315,7 @@ public class Parser extends Observable implements DataSource
 		{
 			Power p = powerIt.next();
 			Map<Date, List<Double>> temp = p.getTemperature(start, end);
-			if (temp != null && temp.size() > 0)
+			if (temp != null && !temp.isEmpty())
 			{
 				result.putAll(temp);
 			}
@@ -337,7 +334,7 @@ public class Parser extends Observable implements DataSource
 		{
 			Power p = powerIt.next();
 			Map<Date, List<Double>> temp = p.getTemperature(start, end);
-			if (temp != null && temp.size() > 0)
+			if (temp != null && !temp.isEmpty())
 			{
 				Iterator<Date> it = temp.keySet().iterator();
 				while (it.hasNext())
@@ -361,7 +358,7 @@ public class Parser extends Observable implements DataSource
 		{
 			Power p = powerIt.next();
 			Map<Date, Double> co2 = p.getCO2(start, end);
-			if (co2 != null && co2.size() > 0)
+			if (co2 != null && !co2.isEmpty())
 			{
 				result.putAll(co2);
 			}

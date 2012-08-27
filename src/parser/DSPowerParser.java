@@ -9,15 +9,15 @@ import au.com.bytecode.opencsv.CSVReader;
 
 public class DSPowerParser implements Power
 {
-	public static int DATE = 0;
-	public static int TIME = 1;
-	public static int FIRST_CURRENT = 2;
-	public static int CURRENT_SETS = 3;
+	public final static int DATE = 0;
+	public final static int TIME = 1;
+	public final static int FIRST_CURRENT = 2;
+	public final static int CURRENT_SETS = 3;
 
-	public static int CO2 = 15;
+	public final static int CO2 = 15;
 
 	// private static double[] POWER_FACTOR = { 0.9, 0.8, 0.7 };
-	private static double[] POWER_FACTOR = { 0.85, 0.875, 0.65 };
+	private final static double[] POWER_FACTOR = { 0.85, 0.875, 0.65 };
 
 	private File file;
 
