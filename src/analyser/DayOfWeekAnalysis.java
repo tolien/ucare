@@ -9,7 +9,7 @@ import java.util.Map;
 
 import ucare.Utility;
 
-public class DayOfWeekAnalysis extends Analyser
+public class DayOfWeekAnalysis extends AbstractAnalyser
 {
 	private static DateFormatSymbols dfs = new DateFormatSymbols();
 	private static int INTERVAL = Calendar.DAY_OF_WEEK;

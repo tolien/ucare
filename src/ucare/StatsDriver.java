@@ -14,7 +14,7 @@ public class StatsDriver
 			DataSource parser = new Parser();
 			parser.read("data", new DSParserFactory());
 			
-			Analyser a = new HourOfDayAnalysis();
+			AbstractAnalyser a = new HourOfDayAnalysis();
 			a.analyse(parser.getTotalPower("Hills-634", null, null));
 			Map<Integer, Double[]> result = a.getBoxplot();
 			Iterator<Integer> it = Utility.asSortedList(result.keySet()).iterator();

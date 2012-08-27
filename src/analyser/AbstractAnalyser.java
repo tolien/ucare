@@ -4,7 +4,7 @@ import java.util.*;
 
 import ucare.Utility;
 
-public abstract class Analyser implements DataAnalyser
+public abstract class AbstractAnalyser implements DataAnalyser
 {
 	protected Map<Integer, Double> data = new HashMap<Integer, Double>();
 	protected Map<Integer, Double[]> boxplot = new HashMap<Integer, Double[]>();
@@ -97,15 +97,15 @@ public abstract class Analyser implements DataAnalyser
 	
 	protected Double quartile(List<Double> list, Integer quartile)
 	{		
-		list = Utility.asSortedList(list);
+		List<Double> sortedList = Utility.asSortedList(list);
 		
-		Integer n = quartile * list.size() / 4;
-		// System.out.println(list.size() + ", " + n);
+		Integer n = quartile * sortedList.size() / 4;
+		// System.out.println(sortedList.size() + ", " + n);
 		
-		if (list.size() == 0)
+		if (sortedList.isEmpty())
 			return 0.0;
 		else
-			return list.get(n) + 0.0;
+			return sortedList.get(n) + 0.0;
 	}
 	
 	protected Double average(List<Double> list)

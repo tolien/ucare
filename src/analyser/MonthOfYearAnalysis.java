@@ -9,7 +9,7 @@ import java.util.Map;
 
 import ucare.Utility;
 
-public class MonthOfYearAnalysis extends Analyser
+public class MonthOfYearAnalysis extends AbstractAnalyser
 {
 	private static DateFormatSymbols dfs = new DateFormatSymbols();
 	private static int INTERVAL = Calendar.MONTH;

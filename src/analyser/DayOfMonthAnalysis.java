@@ -3,7 +3,7 @@ package analyser;
 import java.util.Calendar;
 import java.util.Date;
 
-public class DayOfMonthAnalysis extends Analyser
+public class DayOfMonthAnalysis extends AbstractAnalyser
 {
 	private static int INTERVAL = Calendar.DAY_OF_MONTH;
 	private static String NAME = "Day of Month";

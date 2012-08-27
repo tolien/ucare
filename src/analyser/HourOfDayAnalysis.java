@@ -3,7 +3,7 @@ package analyser;
 import java.util.Calendar;
 import java.util.Date;
 
-public class HourOfDayAnalysis extends Analyser
+public class HourOfDayAnalysis extends AbstractAnalyser
 {
 	private static int INTERVAL = Calendar.HOUR_OF_DAY;
 	private static String NAME = "Hour of Day";
