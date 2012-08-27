@@ -5,8 +5,13 @@ import java.util.Iterator;
 import java.util.List;
 
 
-public class Utility
+public final class Utility
 {
+	private Utility()
+	{
+		
+	}
+	
 	public static boolean isInList(String needle, List<String> haystack)
 	{
 		Iterator<String> haystackIt = haystack.iterator();
@@ -37,7 +42,7 @@ public class Utility
 	
 	public static Double average(List<Double> list)
 	{
-		if (list.size() > 0)
+		if (!list.isEmpty())
 		{
 			return sum(list) / list.size();
 		}

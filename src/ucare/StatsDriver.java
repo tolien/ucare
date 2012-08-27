@@ -27,7 +27,7 @@ public class StatsDriver
 				{
 					s += data[i].intValue() + "\t";
 				}
-				System.out.println(interval + ": " + s);
+				//System.out.println(interval + ": " + s);
 			}
 	}
 }
