@@ -5,8 +5,8 @@ import java.util.Date;
 
 public class DayOfMonthAnalysis extends AbstractAnalyser
 {
-	private static int INTERVAL = Calendar.DAY_OF_MONTH;
-	private static String NAME = "Day of Month";
+	private static final int INTERVAL = Calendar.DAY_OF_MONTH;
+	private static final String NAME = "Day of Month";
 	
 	@Override
 	protected boolean selectData(Date d)

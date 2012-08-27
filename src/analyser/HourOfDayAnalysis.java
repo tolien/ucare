@@ -5,8 +5,8 @@ import java.util.Date;
 
 public class HourOfDayAnalysis extends AbstractAnalyser
 {
-	private static int INTERVAL = Calendar.HOUR_OF_DAY;
-	private static String NAME = "Hour of Day";
+	private static final int INTERVAL = Calendar.HOUR_OF_DAY;
+	private static final String NAME = "Hour of Day";
 
 	@Override
 	protected boolean selectData(Date d)

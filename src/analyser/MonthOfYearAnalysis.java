@@ -12,8 +12,8 @@ import ucare.Utility;
 public class MonthOfYearAnalysis extends AbstractAnalyser
 {
 	private static DateFormatSymbols dfs = new DateFormatSymbols();
-	private static int INTERVAL = Calendar.MONTH;
-	private static String NAME = "Month of Year";
+	private static final int INTERVAL = Calendar.MONTH;
+	private static final String NAME = "Month of Year";
 
 	@Override
 	protected boolean selectData(Date d)

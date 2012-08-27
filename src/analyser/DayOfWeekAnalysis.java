@@ -12,8 +12,8 @@ import ucare.Utility;
 public class DayOfWeekAnalysis extends AbstractAnalyser
 {
 	private static DateFormatSymbols dfs = new DateFormatSymbols();
-	private static int INTERVAL = Calendar.DAY_OF_WEEK;
-	private static String NAME = "Day of Week";
+	private static final int INTERVAL = Calendar.DAY_OF_WEEK;
+	private static final String NAME = "Day of Week";
 	
 	@Override
 	protected boolean selectData(Date d)
